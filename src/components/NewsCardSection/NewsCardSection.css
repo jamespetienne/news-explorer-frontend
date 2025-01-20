@@ -1,0 +1,37 @@
+.news-card-section {
+  padding: 20px 104px;
+  background-color: #F5F6F7;
+}
+
+.news-card-section__title {
+  font: 400 40px/46px Roboto Slab, Arial, sans-serif;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.news-card-section__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-content: center;
+}
+
+.news-card-section__button {
+  display: block;
+  margin: 56px auto 80px;
+  width: 288px;
+  height: 64px;
+  background-color: #FFFFFF;
+  color: #000; 
+  border: none;
+  border-radius: 80px;
+  font: 500 18px/24px Roboto, Arial, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.news-card-section__button:hover {
+  background-color: #E8E8E8; 
+}
+
+  

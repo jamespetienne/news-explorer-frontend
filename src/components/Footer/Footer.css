@@ -1,0 +1,28 @@
+.footer {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: #ffffff;
+  font: 400 16px/22px Roboto, Arial, sans-serif;
+  color: #B6BCBF;
+}
+
+.footer__links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer__link {
+  text-decoration: none;
+  color: #1A1B22;
+  font: 400 18px/24px Roboto, Arial, sans-serif;
+}
+
+.footer__link:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,111 @@
+.news-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  gap: 0;
+  text-align: left;
+  max-width: 400px;
+  max-height: 576px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.news-card__image {
+  width: 400px;
+  height: 272px;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+}
+
+.news-card__content {
+  height: 304px;
+  margin: 0 24px;
+}
+
+.news-card__date {
+  font: 400 18px/24px Roboto, Arial, sans-serif;
+  color: #B6BCBF;
+  margin: 20px 0 0;
+}
+
+.news-card__headline {
+  font: 400 26px/30px Roboto Slab, Arial, sans-serif;
+  color: #1A1B22;
+  height: 60px;
+  margin: 12px 0 16px;
+}
+
+.news-card__snippet {
+  font: 400 16px/22px Roboto, Arial, sans-serif;
+  color: #1A1B22;
+  height: 110px;
+  margin: 0;
+  padding-bottom: 18px;
+}
+
+.news-card__source {
+  font: 700 16px/20px Roboto Slab, Arial, sans-serif;
+  color: #B6BCBF;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  margin: 0;
+  padding: 0;
+}
+
+.news-card__bookmark {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.news-card__bookmark img {
+  width: 40px;
+  height: 40px;
+}
+
+.news-card__bookmark:hover {
+  transform: scale(1.1);
+}
+
+.news-card__signin-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 24px;
+  right: 69px;
+  width: 182px;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #000000;
+  font: 500 12px/14.06px Roboto, Arial, sans-serif;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  z-index: 10; 
+}
+
+.news-card__signin-prompt:hover {
+  background-color: #E8E8E8;
+}
+
+
+
+  

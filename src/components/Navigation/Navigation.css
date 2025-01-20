@@ -1,0 +1,124 @@
+.navigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  max-width: 1440px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  z-index: 10;
+}
+
+.navigation__logo {
+  margin-left: 104px;
+  font: 700 20px/24px Roboto Slab, Arial, sans-serif;
+  color: #FFFFFF;
+}
+
+.navigation__logo_saved-news {
+  color: #1A1B22;
+}
+
+.navigation__links {
+  font: 500 18px/24px Roboto, Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 64px;
+  margin: 0 104px 0 0;
+  padding: 0;
+}
+
+.navigation__links > :nth-child(1) {
+  margin-right: 12px; 
+}
+
+.navigation__link {
+  text-decoration: none;
+  color: #B6BCBF;
+  font-size: 16px;
+  position: relative;
+}
+
+.navigation__link_active {
+  color: white;
+}
+
+.navigation__link_home_saved-news {
+  color: #1A1B22;
+}
+
+.navigation__link_saved-news_active {
+  color: #1A1B22; 
+}
+
+.navigation__link_active::after {
+  content: "";
+  position: absolute;
+  bottom: -31px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 174%;
+  height: 2px;
+  background-color: white;
+}
+
+.navigation__link_saved-news_active::after {
+  content: "";
+  position: absolute;
+  bottom: -31px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 174%;
+  height: 3px;
+  background-color: #1A1B22;
+}
+
+.navigation__button_signin {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 15px 67px;
+  border-radius: 100px;
+  cursor: pointer;
+  font: 500 18px/24px Roboto, Arial, sans-serif;
+}
+
+.navigation__button_signin:hover {
+  background-color: white;
+  color: #2f71e5;
+}
+
+.navigation__button_user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 100px;
+  width: 112px;
+  height: 48px;
+  padding: 0 10px;
+  cursor: pointer;
+  font: 500 18px/24px Roboto, Arial, sans-serif;
+}
+
+.navigation__button_user_saved-news {
+  color: #1A1B22;
+  border: 1px solid #1A1B22;
+}
+
+.navigation__button_user img {
+  width: 24px;
+  height: 24px;
+  margin-left: 20px;
+}
+
+.navigation__button_user:hover {
+  background-color: white;
+  color: #2f71e5;
+}

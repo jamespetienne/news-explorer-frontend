@@ -1,0 +1,31 @@
+.about {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 216px 80px 104px;
+    gap: 30px;
+    background-color: white;
+  }
+  
+  .about__image {
+    width: min(40vw, 464px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%; 
+    object-fit: cover;
+  }
+  
+  .about__content {
+    max-width: 600px;
+  }
+  
+  .about__title {
+    font: 400 40px/46px Roboto Slab, Arial, sans-serif;
+    color: #1A1B22;
+    margin-bottom: 20px;
+  }
+  
+  .about__description {
+    font: 400 18px/24px Roboto, Arial, sans-serif;
+    color: #1A1B22;
+  }
+  

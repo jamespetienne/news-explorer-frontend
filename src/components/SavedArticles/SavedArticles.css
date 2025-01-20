@@ -1,0 +1,43 @@
+.saved-articles {
+  background-color: white;
+}
+.saved-articles__header {
+  margin-top: 80px; 
+  padding: 0 104px; 
+  position: relative;
+}
+
+.saved-articles__title {
+  font: 400 18px/24px Roboto, Arial, sans-serif;
+  color: #1A1B2280;
+  padding-top: 40px;
+  margin-bottom: 16px;
+}
+
+.saved-articles__subtitle {
+  font: 400 40px/46px Roboto Slab, Arial, sans-serif;
+  color: #1A1B22;
+  width: 530px;
+  height: 92px;
+  margin: 28px 0 30px;
+}
+
+.saved-articles__keywords {
+  font: 400 18px/24px Roboto, Arial, sans-serif;
+  color: #1A1B22;
+  width: 712px;
+  height: 24px;
+}
+
+.saved-articles__keywords-highlight {
+  font: 700 18px/24px Roboto, Arial, sans-serif;
+  color: #1a1b22;
+}
+
+.saved-articles__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin: 40px 104px;
+}
+

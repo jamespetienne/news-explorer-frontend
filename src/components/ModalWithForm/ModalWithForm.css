@@ -1,0 +1,151 @@
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: hidden;
+  visibility: hidden;
+  z-index: 999;
+  font: 700 16px/20px Cabinet Grotesk, Arial, sans-serif;
+}
+
+.modal_open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal__container {
+  position: relative;
+  background-color: #ffffff;
+  padding: 28px 28px 36px;
+  border-radius: 16px;
+  max-width: 374px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__title {
+  font: 900 24px/28.13px Roboto, Arial, sans-serif;
+  color: #1A1B22;
+  margin: 0;
+  padding: 0;
+}
+
+.modal__close {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: transparent;
+  border-style: none;
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: calc(100% + 5px);
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.modal__label {
+  width: auto;
+  height: auto;
+  margin-top: 31px;
+  font: 400 12px/14.52px Inter, Arial, sans-serif;
+  color: #2F71E5;
+}
+
+.modal__input {
+  width: 358px;
+  height: 24px;
+  border: none;
+  border-bottom: solid;
+  border-radius: 1px;
+  border-color: rgba(0, 0, 0, 1);
+  color: rgba(0, 0, 0, 1);
+  margin: 0;
+  padding: 0;
+  border-width: 1px;
+  font: 400 14px/16.94px Inter, Arial, sans-serif;
+}
+
+#register-name.modal__input {
+  margin-bottom: 0;
+}
+
+.modal__submit-button {
+  margin-top: 39px;
+  color: #ffffff;
+  background-color: #e6e8eb;
+  padding: 22px 16px;
+  width: 100%;
+  border-radius: 100px;
+  border-style: none;
+  cursor: not-allowed;
+  font: 500 18px/24px Roboto, Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.modal__submit-button--active {
+  background-color: #2f71e5;
+  box-shadow: 0px 4px 15px rgba(14, 26, 57, 0.2);
+  cursor: pointer;
+}
+
+.modal__submit-button--active:hover {
+  background-color: #347EFF; 
+}
+
+.modal__submit-button--active:active {
+  background-color: #2A65CC; 
+}
+
+.modal__span-button {
+  margin: 16px auto 0;
+  display: block;
+  font: 400 14px/16.94px Inter, Arial, Helvetica, sans-serif;
+  border: none;
+  width: 226px;
+  height: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  background: transparent;
+  color: #2f71e5;
+  text-align: center;
+}
+
+.modal__span-button::before {
+  content: "or";
+  color: #000000;
+  margin-right: 8px;
+  font: 400 14px/16.94px Inter, Arial, Helvetica, sans-serif;
+}
+
+.modal__error {
+  color: #FF0000;
+  font: 400 12px/14.52px Inter, Arial, sans-serif;
+  margin-top: -16px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.modal__error--email {
+  margin: 17px auto -35px;
+}
+
+@media screen and (max-width: 620px) {
+  .modal {
+    align-items: flex-end;
+  }
+
+  .modal__container {
+    border: none;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
