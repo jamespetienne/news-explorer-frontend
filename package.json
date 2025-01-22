@@ -19,7 +19,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://YOUR_USERNAME.github.io/REPO_NAME/",
+  "homepage": "https://jamespetienne.github.io/news-explorer-frontend/",
   "eslintConfig": {
     "extends": [
       "react-app",

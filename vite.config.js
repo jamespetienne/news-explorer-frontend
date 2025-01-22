@@ -7,6 +7,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: "/REPO_NAME/", // Replace REPO_NAME with your GitHub repository name
+  base: "/news-explorer-frontend/",
 });
-

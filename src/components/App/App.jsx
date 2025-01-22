@@ -15,7 +15,7 @@ import { fetchNewsArticles } from "../../utils/api";
 function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [activeModal, setActiveModal] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [savedArticles, setSavedArticles] = useState([]);
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
