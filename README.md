@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# News Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**News Explorer** is a responsive web application that allows users to search for news articles from the past week, save their favorite articles, and view them later. The app integrates with the [News API](https://newsapi.org) to fetch articles and simulates backend responses for authentication and article-saving functionalities.
 
-## Available Scripts
+## Live Demo
+[News Explorer](https://jamespetienne.github.io/news-explorer-frontend/)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features
+1. **Search for News Articles**
+   - Users can enter a keyword to search for articles published in the last 7 days.
+   - Integrated with the [News API](https://newsapi.org/v2/everything) for article fetching.
+   - Displays a "Please enter a keyword" error message if the search bar is empty.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. **Dynamic Article Rendering**
+   - Displays up to 100 articles in response to a search query.
+   - Initially shows 3 articles with a "Show More" button to display additional results in batches of 3.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+3. **Bookmark Functionality**
+   - Articles can be bookmarked when the user is logged in.
+   - Displays an inactive "Save" icon for logged-out users with a hover message prompting them to sign in.
+   - Saved articles are displayed on a separate "Saved Articles" page.
 
-### `npm test`
+4. **Simulated Backend**
+   - Stubbed responses for:
+     - Logging in.
+     - Checking authentication tokens.
+     - Saving and deleting articles.
+   - Allows reviewers to interact with the app without a fully functioning backend.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+5. **Preloader Animation**
+   - A circular preloader with "Searching for news..." text is displayed while fetching articles.
 
-### `npm run build`
+6. **Error Handling**
+   - Displays "Nothing Found" if no articles match the search query.
+   - Shows an error message, "Sorry, something went wrong during the request. Please try again later," if the API call fails.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+7. **Responsive Design**
+   - Fully responsive layout optimized for both desktop and mobile devices.
+   - Follows design specifications from Figma.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+8. **Deployment**
+   - Hosted on GitHub Pages for public access.
+   - Fully functional navigation with HashRouter to ensure compatibility with GitHub Pages.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## How It Works
+### **API Integration**
+The app interacts with the [News API](https://newsapi.org/v2/everything) to fetch news articles. The following parameters are used:
+- `q`: Keyword entered by the user.
+- `apiKey`: API key registered with News API.
+- `from`: Date 7 days before the current date.
+- `to`: Current date.
+- `pageSize`: Maximum number of articles (set to 100 for the free plan).
