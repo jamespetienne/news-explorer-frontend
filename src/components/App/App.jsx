@@ -8,9 +8,8 @@ import LoginModal from "../LoginModal/LoginModal.jsx";
 import RegisterModal from "../RegisterModal/RegisterModal.jsx";
 import CompletedModal from "../Completed/CompletedModal.jsx";
 import SavedArticles from "../SavedArticles/SavedArticles.jsx";
-import Preloader from "../Preloader/Preloader.jsx";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import { fetchNewsArticles } from "../../utils/api";
+import { fetchNewsArticles, saveArticle } from "../../utils/api";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -19,6 +18,7 @@ function App() {
   const [savedArticles, setSavedArticles] = useState([]);
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const onSignInClick = () => {
     setActiveModal("login");
@@ -28,36 +28,28 @@ function App() {
     setActiveModal("");
   };
 
-  const handleBookmarkToggle = (article) => {
-    setSavedArticles((prevArticles) => {
-      if (prevArticles.some((saved) => saved.title === article.title)) {
-        return prevArticles.filter((saved) => saved.title !== article.title);
-      }
-      return [...prevArticles, article];
-    });
-  };
-
-  const handleRegisterModal = () => {
-    setActiveModal("register");
-  };
-
-  const handleLoginModal = () => {
-    setActiveModal("login");
-  };
-
-  const handleLogoutClick = (navigate) => {
-    setIsLoggedIn(false);
-    setCurrentUser({});
-    navigate("/");
+  const handleBookmarkToggle = async (article) => {
+    if (!isLoggedIn) {
+      setActiveModal("login");
+      return;
+    }
+    const isAlreadySaved = savedArticles.some((a) => a.title === article.title);
+    if (!isAlreadySaved) {
+      const saved = await saveArticle(article);
+      setSavedArticles([...savedArticles, saved]);
+    } else {
+      setSavedArticles(savedArticles.filter((a) => a.title !== article.title));
+    }
   };
 
   const handleSearchSubmit = async (query) => {
     setIsLoading(true);
+    setError(null);
     try {
-      const results = await fetchNewsArticles(query);
-      setArticles(results.articles);
-    } catch (error) {
-      console.error(error.message);
+      const response = await fetchNewsArticles(query);
+      setArticles(response.articles);
+    } catch (err) {
+      setError("Sorry, something went wrong during the request. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -76,9 +68,9 @@ function App() {
                     isLoggedIn={isLoggedIn}
                     userName={currentUser.name || "User"}
                     onSignInClick={onSignInClick}
-                    onLogoutClick={(navigate) => handleLogoutClick(navigate)}
                   />
                   {isLoading && <Preloader />}
+                  {error && <p className="error-message">{error}</p>}
                   <Main
                     isLoggedIn={isLoggedIn}
                     onSignInClick={onSignInClick}
@@ -100,7 +92,6 @@ function App() {
                       isLoggedIn={isLoggedIn}
                       userName={currentUser.name || "User"}
                       onSignInClick={onSignInClick}
-                      onLogoutClick={(navigate) => handleLogoutClick(navigate)}
                     />
                     <SavedArticles
                       userName={currentUser.name || "User"}
@@ -116,7 +107,6 @@ function App() {
           <LoginModal
             closeActiveModal={closeActiveModal}
             isOpen={activeModal === "login"}
-            handleRegisterModal={handleRegisterModal}
             onSignIn={() => setIsLoggedIn(true)}
           />
           <RegisterModal
@@ -127,7 +117,6 @@ function App() {
               setIsLoggedIn(true);
               setActiveModal("");
             }}
-            handleLoginModal={handleLoginModal}
           />
           <CompletedModal
             closeActiveModal={closeActiveModal}
