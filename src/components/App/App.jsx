@@ -9,7 +9,7 @@ import RegisterModal from "../RegisterModal/RegisterModal.jsx";
 import CompletedModal from "../Completed/CompletedModal.jsx";
 import SavedArticles from "../SavedArticles/SavedArticles.jsx";
 import Preloader from "../Preloader/Preloader.jsx";
-import { HashRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { fetchNewsArticles } from "../../utils/api";
 
 function App() {
@@ -19,7 +19,6 @@ function App() {
   const [savedArticles, setSavedArticles] = useState([]);
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const onSignInClick = () => {
     setActiveModal("login");
@@ -46,7 +45,7 @@ function App() {
     setActiveModal("login");
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = (navigate) => {
     setIsLoggedIn(false);
     setCurrentUser({});
     navigate("/");
@@ -68,18 +67,18 @@ function App() {
     <HashRouter>
       <div className="page">
         <div className="page__content">
-          <Header
-            isLoggedIn={isLoggedIn}
-            userName={currentUser.name || "User"}
-            onSignInClick={onSignInClick}
-            onLogoutClick={handleLogoutClick}
-          />
-          {isLoading && <Preloader />}
           <Routes>
             <Route
               path="/"
               element={
                 <>
+                  <Header
+                    isLoggedIn={isLoggedIn}
+                    userName={currentUser.name || "User"}
+                    onSignInClick={onSignInClick}
+                    onLogoutClick={(navigate) => handleLogoutClick(navigate)}
+                  />
+                  {isLoading && <Preloader />}
                   <Main
                     isLoggedIn={isLoggedIn}
                     onSignInClick={onSignInClick}
@@ -96,10 +95,18 @@ function App() {
               path="/saved-news"
               element={
                 isLoggedIn ? (
-                  <SavedArticles
-                    userName={currentUser.name || "User"}
-                    savedArticles={savedArticles}
-                  />
+                  <>
+                    <Header
+                      isLoggedIn={isLoggedIn}
+                      userName={currentUser.name || "User"}
+                      onSignInClick={onSignInClick}
+                      onLogoutClick={(navigate) => handleLogoutClick(navigate)}
+                    />
+                    <SavedArticles
+                      userName={currentUser.name || "User"}
+                      savedArticles={savedArticles}
+                    />
+                  </>
                 ) : (
                   <Navigate to="/" />
                 )
