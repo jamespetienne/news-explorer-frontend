@@ -23,19 +23,26 @@
 
 // export default NewsCardSection;
 
-import React from "react";
+import React, { useState } from "react";
 import "./NewsCardSection.css";
 import NewsCard from "../NewsCard/NewsCard.jsx";
 
 function NewsCardSection({ articles, isLoggedIn, onSignInClick, onBookmarkToggle }) {
+  const [visibleArticles, setVisibleArticles] = useState(3);
+
+  const handleShowMore = () => {
+    setVisibleArticles((prev) => prev + 3);
+  };
+
   return (
     <section className="news-card-section">
+      <h2 className="news-card-section__title">Search Results</h2>
       {articles.length === 0 ? (
         <p className="news-card-section__message">Nothing Found</p>
       ) : (
         <>
-          <ul className="news-card-section__list">
-            {articles.slice(0, 3).map((article, index) => (
+          <div className="news-card-section__grid">
+            {articles.slice(0, visibleArticles).map((article, index) => (
               <NewsCard
                 key={index}
                 article={article}
@@ -44,8 +51,15 @@ function NewsCardSection({ articles, isLoggedIn, onSignInClick, onBookmarkToggle
                 onBookmarkToggle={onBookmarkToggle}
               />
             ))}
-          </ul>
-          {articles.length > 3 && <button className="news-card-section__button">Show more</button>}
+          </div>
+          {articles.length > visibleArticles && (
+            <button
+              className="news-card-section__button"
+              onClick={handleShowMore}
+            >
+              Show more
+            </button>
+          )}
         </>
       )}
     </section>
@@ -53,6 +67,7 @@ function NewsCardSection({ articles, isLoggedIn, onSignInClick, onBookmarkToggle
 }
 
 export default NewsCardSection;
+4
 
 
 
