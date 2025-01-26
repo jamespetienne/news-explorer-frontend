@@ -33,18 +33,32 @@ const RegisterModal = ({
   const isFormComplete =
     isValidEmail(email) && password.trim().length > 0 && name.trim().length > 0;
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (isFormComplete) {
+  //     const available = await checkEmailAvailability(email);
+  //     if (available) {
+  //       onRegister(values);
+  //       closeActiveModal();
+  //     } else {
+  //       setIsEmailAvailable(false);
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isFormComplete) {
-      const available = await checkEmailAvailability(email);
-      if (available) {
+      try {
+        await signUp(name, email, password);
         onRegister(values);
         closeActiveModal();
-      } else {
-        setIsEmailAvailable(false);
+      } catch (error) {
+        setIsEmailAvailable(false); // Display the error if email exists
       }
     }
   };
+  
 
   return (
     <ModalWithForm

@@ -1,6 +1,7 @@
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { useForm } from "../../Hooks/useForm.js";
 import { useState } from "react";
+import { signIn } from "../../utils/auth";
 
 const LoginModal = ({
   isOpen,
@@ -23,10 +24,24 @@ const LoginModal = ({
 
   const isFormComplete = isValidEmail(email) && password.trim().length > 0;
 
-  function handleSubmit(e) {
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   if (isFormComplete) onSignIn(values);
+  // }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isFormComplete) onSignIn(values);
-  }
+    if (isFormComplete) {
+      try {
+        const response = await signIn(email, password);
+        onSignIn(response.token); // Update state or context with token
+        closeActiveModal();
+      } catch (error) {
+        console.error("Login failed", error.message);
+      }
+    }
+  };
+  
 
   return (
     <ModalWithForm
