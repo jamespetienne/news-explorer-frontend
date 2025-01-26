@@ -1,134 +1,4 @@
-// import React, { useState } from "react";
-// import "./App.css";
-// import Header from "../Header/Header.jsx";
-// import Main from "../Main/Main.jsx";
-// import About from "../About/About.jsx";
-// import Footer from "../Footer/Footer.jsx";
-// import LoginModal from "../LoginModal/LoginModal.jsx";
-// import RegisterModal from "../RegisterModal/RegisterModal.jsx";
-// import CompletedModal from "../Completed/CompletedModal.jsx";
-// import SavedArticles from "../SavedArticles/SavedArticles";
-// import Preloader from "../Preloader/Preloader.jsx";
-// import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-
-// function App() {
-//   const [currentUser, setCurrentUser] = useState({});
-//   const [activeModal, setActiveModal] = useState("");
-//   const [isLoggedIn, setIsLoggedIn] = useState(true);
-//   const [savedArticles, setSavedArticles] = useState([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const navigate = useNavigate();
-
-//   const onSignInClick = () => {
-//     setActiveModal("login");
-//   };
-
-//   const closeActiveModal = () => {
-//     setActiveModal("");
-//   };
-
-//   const handleBookmarkToggle = (article) => {
-//     setSavedArticles((prevArticles) => {
-//       if (prevArticles.some((saved) => saved.title === article.title)) {
-//         return prevArticles.filter((saved) => saved.title !== article.title);
-//       }
-//       return [...prevArticles, article];
-//     });
-//   };
-
-//   const handleRegisterModal = () => {
-//     setActiveModal("register");
-//   };
-
-//   const handleLoginModal = () => {
-//     setActiveModal("login");
-//   };
-
-//   const handleLogoutClick = () => {
-//     setIsLoggedIn(false);
-//     setCurrentUser({});
-//     navigate("/");
-//   };
-
-//   const fetchData = async () => {
-//     setIsLoading(true);
-//     try {
-//       // Simulate an API call
-//       await new Promise((resolve) => setTimeout(resolve, 2000));
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="page">
-//       <div className="page__content">
-//         <Header
-//           isLoggedIn={isLoggedIn}
-//           userName={currentUser.name || "User"}
-//           onSignInClick={onSignInClick}
-//           onLogoutClick={handleLogoutClick}
-//         />
-//         {isLoading && <Preloader />}
-//         <Routes>
-//           <Route
-//             path="/"
-//             element={
-//               <>
-//                 <Main
-//                   isLoggedIn={isLoggedIn}
-//                   onSignInClick={onSignInClick}
-//                   onBookmarkToggle={handleBookmarkToggle}
-//                   savedArticles={savedArticles}
-//                   onSearch={fetchData} // Example: Trigger Preloader during search
-//                 />
-//                 <About />
-//               </>
-//             }
-//           />
-//           <Route
-//             path="/saved-news"
-//             element={
-//               isLoggedIn ? (
-//                 <SavedArticles
-//                   userName={currentUser.name || "User"}
-//                   savedArticles={savedArticles}
-//                 />
-//               ) : (
-//                 <Navigate to="/" />
-//               )
-//             }
-//           />
-//         </Routes>
-//         <LoginModal
-//           closeActiveModal={closeActiveModal}
-//           isOpen={activeModal === "login"}
-//           handleRegisterModal={handleRegisterModal}
-//           onSignIn={() => setIsLoggedIn(true)}
-//         />
-//         <RegisterModal
-//           closeActiveModal={closeActiveModal}
-//           isOpen={activeModal === "register"}
-//           onRegister={(userData) => {
-//             setCurrentUser(userData);
-//             setIsLoggedIn(true);
-//             setActiveModal("");
-//           }}
-//           handleLoginModal={handleLoginModal}
-//         />
-//         <CompletedModal
-//           closeActiveModal={closeActiveModal}
-//           isOpen={activeModal === "completed"}
-//         />
-//         <Footer />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "../Header/Header.jsx";
 import Main from "../Main/Main.jsx";
@@ -138,9 +8,9 @@ import LoginModal from "../LoginModal/LoginModal.jsx";
 import RegisterModal from "../RegisterModal/RegisterModal.jsx";
 import CompletedModal from "../Completed/CompletedModal.jsx";
 import SavedArticles from "../SavedArticles/SavedArticles.jsx";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import { fetchNewsArticles, saveArticle } from "../../utils/api";
-import Preloader from "../Preloader/Preloader";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { fetchNewsArticles, saveArticle, checkToken, signUp, signIn } from "../../utils/api";
+import Preloader from "../Preloader/Preloader.jsx";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -151,7 +21,20 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const onSignInClick = () => setActiveModal("login");
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      checkToken(token)
+        .then((res) => {
+          setCurrentUser(res);
+          setIsLoggedIn(true);
+        })
+        .catch((err) => console.error("Token check failed", err));
+    }
+  }, []);
+
+  const handleRegisterModal = () => setActiveModal("register");
+  const handleLoginModal = () => setActiveModal("login");
   const closeActiveModal = () => setActiveModal("");
 
   const handleBookmarkToggle = async (article) => {
@@ -181,77 +64,102 @@ function App() {
     }
   };
 
+  const onRegister = ({ name, avatar, email, password }) => {
+    signUp(name, avatar, email, password)
+      .then(() => {
+        closeActiveModal();
+        onSignIn({ email, password });
+      })
+      .catch((err) => console.error("Registration failed", err));
+  };
+
+  const onSignIn = ({ email, password }) => {
+    signIn(email, password)
+      .then((res) => {
+        if (res.token) {
+          localStorage.setItem("jwt", res.token);
+          closeActiveModal();
+          checkToken(res.token).then((userResponse) => {
+            setCurrentUser(userResponse);
+            setIsLoggedIn(true);
+          });
+        } else {
+          throw new Error("Token not received");
+        }
+      })
+      .catch((err) => console.error("Login failed", err));
+  };
+
+  const onSignOut = () => {
+    localStorage.removeItem("jwt");
+    setCurrentUser({});
+    setIsLoggedIn(false);
+  };
+
   return (
-    <HashRouter>
-      <div className="page">
-        <div className="page__content">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Header
-                    isLoggedIn={isLoggedIn}
-                    userName={currentUser.name || "User"}
-                    onSignInClick={onSignInClick}
-                  />
-                  {isLoading && <Preloader />}
-                  {error && <p className="error-message">{error}</p>}
-                  <Main
-                    isLoggedIn={isLoggedIn}
-                    onSignInClick={onSignInClick}
-                    onBookmarkToggle={handleBookmarkToggle}
-                    savedArticles={savedArticles}
-                    onSearch={handleSearchSubmit}
-                    articles={articles}
-                  />
-                  <About />
-                </>
-              }
-            />
-            <Route
-              path="/saved-news"
-              element={
-                isLoggedIn ? (
-                  <>
-                    <Header
-                      isLoggedIn={isLoggedIn}
-                      userName={currentUser.name || "User"}
-                      onSignInClick={onSignInClick}
-                    />
-                    <SavedArticles
-                      userName={currentUser.name || "User"}
-                      savedArticles={savedArticles}
-                    />
-                  </>
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-          </Routes>
-          <LoginModal
-            closeActiveModal={closeActiveModal}
-            isOpen={activeModal === "login"}
-            onSignIn={() => setIsLoggedIn(true)}
+    <div className="page">
+      <div className="page__content">
+        <Header
+          isLoggedIn={isLoggedIn}
+          userName={currentUser.name || "User"}
+          onSignInClick={handleLoginModal}
+          onLogoutClick={onSignOut}
+        />
+        {isLoading && <Preloader />}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Main
+                  isLoggedIn={isLoggedIn}
+                  onSignInClick={handleLoginModal}
+                  onBookmarkToggle={handleBookmarkToggle}
+                  savedArticles={savedArticles}
+                  onSearch={handleSearchSubmit}
+                  articles={articles}
+                />
+                <About />
+              </>
+            }
           />
-          <RegisterModal
-            closeActiveModal={closeActiveModal}
-            isOpen={activeModal === "register"}
-            onRegister={(userData) => {
-              setCurrentUser(userData);
-              setIsLoggedIn(true);
-              setActiveModal("");
-            }}
+          <Route
+            path="/saved-news"
+            element={
+              isLoggedIn ? (
+                <SavedArticles
+                  userName={currentUser.name || "User"}
+                  savedArticles={savedArticles}
+                />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
           />
-          <CompletedModal
-            closeActiveModal={closeActiveModal}
-            isOpen={activeModal === "completed"}
-          />
-          <Footer />
-        </div>
+        </Routes>
+        <LoginModal
+          closeActiveModal={closeActiveModal}
+          isOpen={activeModal === "login"}
+          handleRegisterModal={handleRegisterModal}
+          onSignIn={onSignIn}
+        />
+        <RegisterModal
+          closeActiveModal={closeActiveModal}
+          isOpen={activeModal === "register"}
+          handleLoginModal={handleLoginModal}
+          onRegister={(userData) => {
+            setCurrentUser(userData);
+            setIsLoggedIn(true);
+            setActiveModal("");
+          }}
+        />
+        <CompletedModal
+          closeActiveModal={closeActiveModal}
+          isOpen={activeModal === "completed"}
+        />
+        <Footer />
       </div>
-    </HashRouter>
+    </div>
   );
 }
 
