@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "vite",
+    "dev": "vite",
     "build": "vite build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -41,7 +42,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "gh-pages": "^6.3.0",
+    "opn-cli": "^4.1.0",
     "vite": "^6.0.5"
   }
 }
-

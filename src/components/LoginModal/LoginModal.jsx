@@ -24,25 +24,30 @@ const LoginModal = ({
 
   const isFormComplete = isValidEmail(email) && password.trim().length > 0;
 
-  // function handleSubmit(e) {
+  // const handleSubmit = async (e) => {
   //   e.preventDefault();
-  //   if (isFormComplete) onSignIn(values);
-  // }
+  //   if (isFormComplete) {
+  //     try {
+  //       const response = await signIn(email, password);
+  //       onSignIn(response.token);
+  //       closeActiveModal();
+  //     } catch (error) {
+  //       console.error("Login failed", error.message);
+  //     }
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isFormComplete) {
-      try {
-        const response = await signIn(email, password);
-        onSignIn(response.token); // Update state or context with token
-        closeActiveModal();
-      } catch (error) {
-        console.error("Login failed", error.message);
-      }
+    try {
+      const { token, user } = await signIn(email, password);
+      onSignIn(token, user);
+      closeActiveModal();
+    } catch (err) {
+      setError("Invalid email or password.");
     }
   };
   
-
   return (
     <ModalWithForm
       closeActiveModal={closeActiveModal}

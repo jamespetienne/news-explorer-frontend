@@ -129,8 +129,8 @@
 .modal__error {
   color: #FF0000;
   font: 400 12px/14.52px Inter, Arial, sans-serif;
-  margin-top: -16px;
-  margin-bottom: 16px;
+  margin-top: 5px;
+  margin-bottom: -20px;
   display: block;
 }
 

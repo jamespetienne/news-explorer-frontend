@@ -10,13 +10,14 @@ function Navigation({ isLoggedIn, userName, onSignInClick, onLogoutClick }) {
 
   return (
     <nav className="navigation">
-      <div
+      <Link
+        to="/"
         className={`navigation__logo ${
           isSavedNews ? "navigation__logo_saved-news" : ""
         }`}
       >
         NewsExplorer
-      </div>
+      </Link>
       <ul className="navigation__links">
         <li>
           <Link

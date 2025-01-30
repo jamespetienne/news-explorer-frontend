@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ModalWithForm.css";
 import close from "../../assets/close-modal.svg";
 
@@ -13,6 +13,40 @@ function ModalWithForm({
   spanText,
   isButtonActive,
 }) {
+  // Close modal when clicking outside its borders
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (e.target.classList.contains("modal")) {
+        closeActiveModal();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, closeActiveModal]);
+
+  // Close modal when pressing the Escape key
+  useEffect(() => {
+    const handleEscapeKey = (e) => {
+      if (e.key === "Escape") {
+        closeActiveModal();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isOpen, closeActiveModal]);
+
   return (
     <div className={`modal ${isOpen ? "modal_open" : ""}`}>
       <div className="modal__container">

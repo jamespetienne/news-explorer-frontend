@@ -29,10 +29,12 @@ function NewsCard({ article, isLoggedIn, onSignInClick, onBookmarkToggle }) {
     setShowSigninPrompt(false);
   };
 
-  const formattedDate = new Date(article.publishedAt).toLocaleDateString(
-    undefined,
-    { year: "numeric", month: "long", day: "numeric" }
-  );
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const formattedDate = formatDate(article.publishedAt);
 
   return (
     <div className="news-card">
@@ -65,7 +67,7 @@ function NewsCard({ article, isLoggedIn, onSignInClick, onBookmarkToggle }) {
         </div>
       )}
       <div className="news-card__content">
-        <p className="news-card__date">{article.publishedAt}</p>
+        <p className="news-card__date">{formattedDate}</p>
         <h2 className="news-card__headline">{article.title}</h2>
         <p className="news-card__snippet">{article.snippet}</p>
         <p className="news-card__source">{article.source}</p>
@@ -75,3 +77,4 @@ function NewsCard({ article, isLoggedIn, onSignInClick, onBookmarkToggle }) {
 }
 
 export default NewsCard;
+

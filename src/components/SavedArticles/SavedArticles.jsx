@@ -3,6 +3,19 @@ import "./SavedArticles.css";
 import NewsCardSection from "../NewsCardSection/NewsCardSection.jsx";
 
 function SavedArticles({ userName, savedArticles }) {
+  if (!savedArticles || savedArticles.length === 0) {
+    return (
+      <div className="saved-articles">
+        <header className="saved-articles__header">
+          <h1 className="saved-articles__title">Saved Articles</h1>
+          <p className="saved-articles__subtitle">
+            {userName}, you have no saved articles.
+          </p>
+        </header>
+      </div>
+    );
+  }
+
   const keywords = Array.from(
     new Set(savedArticles.map((article) => article.keyword))
   );
@@ -15,9 +28,9 @@ function SavedArticles({ userName, savedArticles }) {
   return (
     <div className="saved-articles">
       <header className="saved-articles__header">
-        <h1 className="saved-articles__title">Saved articles</h1>
+        <h1 className="saved-articles__title">Saved Articles</h1>
         <p className="saved-articles__subtitle">
-          {userName}, you have {savedArticles.length} saved articles
+          {userName}, you have {savedArticles.length} saved articles.
         </p>
         <p className="saved-articles__keywords">
           By keywords:{" "}
@@ -36,5 +49,6 @@ function SavedArticles({ userName, savedArticles }) {
 }
 
 export default SavedArticles;
+
 
 

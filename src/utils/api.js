@@ -1,133 +1,85 @@
-// Helper function to check response
-const _checkResponse = (res) => {
+import { getNews, filterNewsData } from "./newsApi";
+
+const API_URL = "http://localhost:3001";
+const headers = { "Content-Type": "application/json" };
+
+function _checkResponse(res) {
   if (res.ok) {
     return res.json();
   }
   return Promise.reject(`Error: ${res.status}`);
-};
-
-// Determine the API base URL
-const newsApiBaseUrl =
-  import.meta.env.MODE === "production"
-    ? "https://nomoreparties.co/news/v2/everything"
-    : "https://newsapi.org/v2/everything";
-
-// Retrieve API key from environment variables
-const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-
-if (!apiKey) {
-  throw new Error("API Key is missing. Ensure VITE_NEWS_API_KEY is set in the .env file.");
 }
 
-// Fetch news articles based on query
+function _getHeaders(token) {
+  return {
+    ...headers,
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+}
+
+// Fetch news articles
 export const fetchNewsArticles = async (query) => {
-  if (!query) {
-    throw new Error("Please enter a keyword");
+  try {
+    const response = await fetch("http://localhost:3001/articles"); // Fetch all articles
+    const data = await response.json();
+
+    if (!data || !Array.isArray(data)) {
+      console.error("API response does not contain articles:", data);
+      throw new Error("Invalid response from API");
+    }
+
+    // ✅ Filter articles based on query (case-insensitive search)
+    const filteredArticles = data.filter((article) =>
+      article.title.toLowerCase().includes(query.toLowerCase())
+    );
+
+    console.log("Filtered Articles:", filteredArticles);
+    return filteredArticles;
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    throw new Error("Failed to fetch news articles. Please try again later.");
   }
-
-  const fromDate = new Date();
-  fromDate.setDate(fromDate.getDate() - 7); // 7 days ago
-
-  const url = new URL(newsApiBaseUrl);
-  url.searchParams.append("q", query);
-  url.searchParams.append("apiKey", apiKey);
-  url.searchParams.append("from", fromDate.toISOString().split("T")[0]);
-  url.searchParams.append("to", new Date().toISOString().split("T")[0]);
-  url.searchParams.append("pageSize", 100);
-
-  const response = await fetch(url.toString());
-  return _checkResponse(response);
 };
 
-// Simulated authorization for testing purposes
-export const authorize = (email, password) => {
-  return new Promise((resolve) => {
-    resolve({ token: "a_fake_token" });
-  });
-};
 
-// Simulate checking a token
-export const checkToken = (token) => {
-  return new Promise((resolve) => {
-    resolve({
-      data: { name: "fake user", email: "fake@example.com", id: "fake-id" },
-    });
-  });
-};
-
-// Simulate fetching saved articles
-export function getItems() {
-  return new Promise((resolve) =>
-    resolve([
-      {
-        id: "65f7368dfb74bd6a92114c85",
-        title: "Some news article",
-        url: "https://example.com/article1",
-        description: "Article description 1",
-        imageUrl: "https://via.placeholder.com/150",
-        publishedAt: "2023-01-01",
-        source: { name: "Source 1" },
-      },
-      {
-        id: "65f7371e7bce9e7d331b11a0",
-        title: "Another news article",
-        url: "https://example.com/article2",
-        description: "Article description 2",
-        imageUrl: "https://via.placeholder.com/150",
-        publishedAt: "2023-01-02",
-        source: { name: "Source 2" },
-      },
-    ])
-  );
+// Fetch saved articles
+export function getSavedArticles() {
+  const token = localStorage.getItem("jwt");
+  return fetch(`${API_URL}/articles`, {
+    method: "GET",
+    headers: _getHeaders(token),
+  }).then(_checkResponse);
 }
 
-// Simulate saving an article
+// Save an article
 export function saveArticle(article) {
-  return new Promise((resolve) =>
-    resolve({
-      id: "65f7371e7bce9e7d331b11a0",
-      url: article.url,
-      title: article.title,
-      imageUrl: article.imageUrl,
-      description: article.description,
-      publishedAt: article.publishedAt,
-      source: article.source,
-    })
-  );
+  const token = localStorage.getItem("jwt");
+  return fetch(`${API_URL}/articles`, {
+    method: "POST",
+    headers: _getHeaders(token),
+    body: JSON.stringify(article),
+  }).then(_checkResponse);
 }
 
-// Sign-in function
-export const signIn = async (email, password) => {
-  try {
-    const response = await fetch("https://example.com/api/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    return _checkResponse(response);
-  } catch (err) {
-    console.error("Sign-in failed:", err);
-    throw err;
-  }
-};
+// Delete a saved article
+export function deleteArticle(id) {
+  const token = localStorage.getItem("jwt");
+  return fetch(`${API_URL}/articles/${id}`, {
+    method: "DELETE",
+    headers: _getHeaders(token),
+  }).then(_checkResponse);
+}
 
-export const signUp = async (name, avatar, email, password) => {
-  try {
-    const response = await fetch("https://example.com/api/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, avatar, email, password }),
-    });
-    return _checkResponse(response);
-  } catch (err) {
-    console.error("Sign-up failed:", err);
-    throw err;
-  }
-};
+// Token Validation
+function checkToken() {
+  const token = localStorage.getItem("jwt");
+  return fetch(`${API_URL}/users/me`, {
+    method: "GET",
+    headers: _getHeaders(token),
+  }).then(_checkResponse);
+}
+
+// ✅ Ensure correct exports
+export { _checkResponse, checkToken };
 
 
-export { _checkResponse };
