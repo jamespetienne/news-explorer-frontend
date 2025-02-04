@@ -1,25 +1,34 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-export function useForm(initialValues, validate) {
-  const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
+export const useForm = (inputValues) => {
+  const [values, setValues] = useState(inputValues);
+  const [inputErrors, setInputErrors] = useState(inputValues);
+  const [isInvalid, setIsInvalid] = useState(inputValues);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
+  const checkValidity = (evt) => {
+    const { name, validationMessage } = evt.target;
 
-    if (validate) {
-      setErrors(validate({ ...values, [name]: value }));
+    if (!evt.target.validity.valid) {
+      setIsInvalid({ ...isInvalid, [name]: true });
+      setInputErrors({ ...inputErrors, [name]: validationMessage });
+    } else {
+      setIsInvalid({ ...isInvalid, [name]: false });
     }
   };
 
-  const resetForm = () => {
-    setValues(initialValues);
-    setErrors({});
+  const handleChange = (evt) => {
+    const { value, name } = evt.target;
+    setValues({ ...values, [name]: value });
+    checkValidity(evt);
   };
 
-  return { values, handleChange, setValues, errors, resetForm };
-}
+  return {
+    values,
+    handleChange,
+    setValues,
+    isFormValid,
+    setIsFormValid,
+    isInvalid,
+  };
+};

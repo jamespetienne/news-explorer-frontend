@@ -1,87 +1,65 @@
-import React, { useEffect } from "react";
 import "./ModalWithForm.css";
-import close from "../../assets/close-modal.svg";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { useEscape } from "../../hooks/useEscape";
 
 function ModalWithForm({
+  name,
   title,
   children,
-  buttonText,
-  isOpen,
-  closeActiveModal,
-  orModal,
-  onSubmit,
-  spanText,
-  isButtonActive,
+  closeModal,
+  submitButtonText,
+  handleRedirect,
+  isFormValid,
+  apiError,
+  isActive,
+  handleSubmit,
 }) {
-  // Close modal when clicking outside its borders
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (e.target.classList.contains("modal")) {
-        closeActiveModal();
-      }
-    };
+  useEscape(closeModal);
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleOutsideClick);
+  const handleClickOutsideClose = (evt) => {
+    if (evt.target.classList.contains("modal")) {
+      closeModal();
     }
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isOpen, closeActiveModal]);
-
-  // Close modal when pressing the Escape key
-  useEffect(() => {
-    const handleEscapeKey = (e) => {
-      if (e.key === "Escape") {
-        closeActiveModal();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscapeKey);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
-    };
-  }, [isOpen, closeActiveModal]);
+  };
 
   return (
-    <div className={`modal ${isOpen ? "modal_open" : ""}`}>
+    <div
+      className={`modal modal_type_${name} ${!isActive ? '' : 'modal_opened'}`}
+      onMouseDown={handleClickOutsideClose}
+    >
       <div className="modal__container">
-        <form className="modal__form" onSubmit={onSubmit}>
-          <button
-            className="modal__close"
-            type="button"
-            onClick={closeActiveModal}
-          >
-            <img src={close} alt="close-button" />
-          </button>
+        <form className="modal__form form" onSubmit={handleSubmit} >
           <h2 className="modal__title">{title}</h2>
           {children}
-          <div className="modal__login-wrapper">
+          {apiError && (
+            <ErrorMessage
+              errorMessage={apiError}
+              className={'error-message error-message_content_api'}
+            />
+          )}
+          <button
+            disabled={!isFormValid}
+            className="modal__button"
+            type="submit"
+          >
+            {submitButtonText}
+          </button>
+          <div className="modal__redirect">
+            or
             <button
-              className={`modal__submit-button ${
-                isButtonActive ? "modal__submit-button--active" : ""
-              }`}
-              type="submit"
-              disabled={!isButtonActive}
+              className="modal__redirect-button"
+              type="button"
+              onClick={handleRedirect}
             >
-              {buttonText || "Submit"}
-            </button>
-            <button
-              className="modal__span-button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                orModal();
-              }}
-            >
-              {spanText}
+              {name === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </div>
         </form>
+        <button
+          className="modal__close-button"
+          type="button"
+          onClick={closeModal}
+        />
       </div>
     </div>
   );

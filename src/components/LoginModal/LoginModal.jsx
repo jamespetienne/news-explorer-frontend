@@ -1,98 +1,111 @@
+import React, { useEffect } from 'react';
+import { useForm } from '../../hooks/useForm';
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
-import { useForm } from "../../Hooks/useForm.js";
-import { useState } from "react";
-import { signIn } from "../../utils/auth";
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
-const LoginModal = ({
-  isOpen,
-  closeActiveModal,
-  handleRegisterModal,
-  onSignIn,
-}) => {
-  const { values, handleChange } = useForm({ email: "", password: "" });
-  const { email, password } = values;
+function LoginModal({
+  closeModal,
+  isActive,
+  handleRegisterClick,
+  isLoading,
+  apiError,
+  activeModal,
+  handleUserLogin
+}) {
+  const {
+    values,
+    handleChange,
+    setValues,
+    isFormValid,
+    setIsFormValid,
+    isInvalid,
+  } = useForm({
+    email: "",
+    password: "",
+  });
 
-  const [isEmailValid, setIsEmailValid] = useState(true);
-
-  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    handleChange(e);
-    setIsEmailValid(isValidEmail(value));
-  };
-
-  const isFormComplete = isValidEmail(email) && password.trim().length > 0;
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (isFormComplete) {
-  //     try {
-  //       const response = await signIn(email, password);
-  //       onSignIn(response.token);
-  //       closeActiveModal();
-  //     } catch (error) {
-  //       console.error("Login failed", error.message);
-  //     }
-  //   }
-  // };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { token, user } = await signIn(email, password);
-      onSignIn(token, user);
-      closeActiveModal();
-    } catch (err) {
-      setError("Invalid email or password.");
+  // use effect runs after the component renders, triggered based on dependencies aka second argument passed to it
+  useEffect(() => {
+    if (Object.values(isInvalid).every((item) => item === false)) {
+      setIsFormValid(true); // converts isInvalid obj. into array of values, if every value is false, then form becomes true
+    } else {
+      setIsFormValid(false);
     }
-  };
-  
+
+  }, [isInvalid, setIsFormValid]); // run this effect whenever isInvalid or setIsFormValid changes
+
+  // whenever isActive state or setValues function changes, effect is triggered
+  useEffect(() => {
+    if (isActive) {
+        setValues({
+            email: '',
+            password: '',
+        });
+    }
+  }, [isActive, setValues])
+
+  const handleSubmit = (evt) => {
+    handleUserLogin(values);
+    evt.preventDefault();
+  }
+
   return (
     <ModalWithForm
-      closeActiveModal={closeActiveModal}
+      apiError={apiError}
+      title={'Sign in'}
       name="login"
-      title="Sign in"
-      buttonText="Sign in"
-      isOpen={isOpen}
-      onSubmit={handleSubmit}
-      spanText="Sign Up"
-      orModal={handleRegisterModal}
-      isButtonActive={isFormComplete}
+      closeModal={closeModal}
+      handleSubmit={handleSubmit}
+      activeModal={activeModal}
+      handleRedirect={handleRegisterClick}
+      isFormValid={isFormValid}
+      submitButtonText={isLoading ? "Signing in" : "Sign in"}
+      isActive={isActive}
     >
-      <label className="modal__label" htmlFor="login-email">
+      <label htmlFor="email" className="form__label">
         Email
       </label>
       <input
-        className="modal__input"
-        type="text"
+        className="form__input"
+        type="email"
+        id="email"
+        value={values.email}
         name="email"
-        id="login-email"
-        placeholder="Email"
-        value={email}
-        onChange={handleEmailChange}
-        autoComplete="username"
+        pattern="[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}"
+        autoComplete="off"
+        placeholder="Enter email"
+        required
+        onChange={handleChange}
       />
-      {!isEmailValid && (
-        <span className="modal__error">Invalid email address</span>
+      {isInvalid.email && (
+        <ErrorMessage
+          errorMessage={'Invalid email address'}
+          className={'error-message error-message_content_email'}
+        />
       )}
-      <label className="modal__label" htmlFor="login-password">
+      <label className="form__label" htmlFor="password">
         Password
       </label>
       <input
-        className="modal__input"
+        className="form__input"
         type="password"
+        id="password"
+        value={values.password}
         name="password"
-        id="login-password"
-        placeholder="Password"
-        value={password}
+        autoComplete="off"
+        placeholder="Enter password"
+        required
+        minLength={3}
         onChange={handleChange}
-        autoComplete="current-password"
       />
+      {isInvalid.password && (
+        <ErrorMessage
+          errorMessage={'Invalid password'}
+          className={`error-message error-message_content_password`}
+        />
+      )}
     </ModalWithForm>
   );
-};
+}
 
 export default LoginModal;
-
-

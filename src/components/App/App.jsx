@@ -1,467 +1,381 @@
-// import React, { useState, useEffect } from "react";
-// import "./App.css";
-// import Header from "../Header/Header.jsx";
-// import Main from "../Main/Main.jsx";
-// import About from "../About/About.jsx";
-// import Footer from "../Footer/Footer.jsx";
-// import LoginModal from "../LoginModal/LoginModal.jsx";
-// import RegisterModal from "../RegisterModal/RegisterModal.jsx";
-// import CompletedModal from "../Completed/CompletedModal.jsx";
-// import SavedArticles from "../SavedArticles/SavedArticles.jsx";
-// import Preloader from "../Preloader/Preloader.jsx";
-// import { Routes, Route, Navigate } from "react-router-dom";
-// import {
-//   fetchNewsArticles,
-//   saveArticle,
-//   checkToken,
-//   signUp,
-//   signIn,
-// } from "../../utils/api";
-
-// function App() {
-//   const [currentUser, setCurrentUser] = useState({});
-//   const [activeModal, setActiveModal] = useState("");
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [savedArticles, setSavedArticles] = useState([]);
-//   const [articles, setArticles] = useState([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState("");
-
-//   // // useEffect(() => {
-//   // //   const token = localStorage.getItem("jwt");
-//   // //   if (token) {
-//   // //     checkToken(token)
-//   // //       .then((res) => {
-//   // //         setCurrentUser(res);
-//   // //         setIsLoggedIn(true);
-//   // //       })
-//   // //       .catch((err) => console.error("Token check failed", err));
-//   // //   }
-//   // // }, []);
-
-//   // useEffect(() => {
-//   //   const token = localStorage.getItem("jwt");
-//   //   if (token) {
-//   //     checkToken(token)
-//   //       .then((user) => {
-//   //         setCurrentUser(user);
-//   //         setIsLoggedIn(true);
-//   //       })
-//   //       .catch(() => {
-//   //         setError("Session expired. Please log in again."); // ✅ Handle error properly
-//   //         localStorage.removeItem("jwt");
-//   //       });
-//   //   }
-//   // }, []);
-
-//   // const handleRegisterModal = () => setActiveModal("register");
-//   // const handleLoginModal = () => setActiveModal("login");
-//   // const closeActiveModal = () => setActiveModal("");
-
-//   // const handleBookmarkToggle = async (article) => {
-//   //   if (!isLoggedIn) {
-//   //     setActiveModal("login");
-//   //     return;
-//   //   }
-//   //   const isAlreadySaved = savedArticles.some((a) => a.title === article.title);
-//   //   if (!isAlreadySaved) {
-//   //     const saved = await saveArticle(article);
-//   //     setSavedArticles([...savedArticles, saved]);
-//   //   } else {
-//   //     setSavedArticles(savedArticles.filter((a) => a.title !== article.title));
-//   //   }
-//   // };
-
-//   // const handleSearchSubmit = async (query) => {
-//   //   setIsLoading(true);
-//   //   setError(null);
-//   //   setArticles([]);
-//   //   try {
-//   //     const response = await fetchNewsArticles(query);
-//   //     if (response.articles.length === 0) {
-//   //       setError("no-results");
-//   //     } else {
-//   //       setArticles(response.articles);
-//   //       setError(null);
-//   //     }
-//   //   } catch (err) {
-//   //     setError("no-results");
-//   //   } finally {
-//   //     setIsLoading(false);
-//   //   }
-//   // };
-
-//   // const onRegister = ({ name, avatar, email, password }) => {
-//   //   signUp(name, avatar, email, password)
-//   //     .then(() => {
-//   //       closeActiveModal();
-//   //       onSignIn({ email, password });
-//   //     })
-//   //     .catch((err) => console.error("Registration failed", err));
-//   // };
-
-//   // // const onSignIn = ({ email, password }) => {
-//   // //   signIn(email, password)
-//   // //     .then((res) => {
-//   // //       if (res.token) {
-//   // //         localStorage.setItem("jwt", res.token);
-//   // //         closeActiveModal();
-//   // //         checkToken(res.token).then((userResponse) => {
-//   // //           setCurrentUser(userResponse);
-//   // //           setIsLoggedIn(true);
-//   // //         });
-//   // //       } else {
-//   // //         throw new Error("Token not received");
-//   // //       }
-//   // //     })
-//   // //     .catch((err) => console.error("Login failed", err));
-//   // // };
-
-//   // // const onSignOut = () => {
-//   // //   localStorage.removeItem("jwt");
-//   // //   setCurrentUser({});
-//   // //   setIsLoggedIn(false);
-//   // // };
-
-//   // const onSignIn = (token, user) => {
-//   //   signIn(email, password) .then((res) => {
-//   //   setCurrentUser(user);
-//   //   setIsLoggedIn(true);
-//   //   setActiveModal("");
-//   // });
-//   // }
-//   // const onSignOut = () => {
-//   //   signOut().then(() => {
-//   //     setCurrentUser({});
-//   //     setIsLoggedIn(false);
-//   //   });
-//   // };
-
-//   useEffect(() => {
-//     const token = localStorage.getItem("jwt");
-//     if (token) {
-//       checkToken(token)
-//         .then((user) => {
-//           setCurrentUser(user);
-//           setIsLoggedIn(true);
-//         })
-//         .catch(() => {
-//           setError("Session expired. Please log in again.");
-//           localStorage.removeItem("jwt");
-//         });
-//     }
-//   }, []);
-
-//   const handleRegisterModal = () => setActiveModal("register");
-//   const handleLoginModal = () => setActiveModal("login");
-//   const closeActiveModal = () => setActiveModal("");
-
-//   const handleBookmarkToggle = async (article) => {
-//     if (!isLoggedIn) {
-//       setActiveModal("login");
-//       return;
-//     }
-//     const isAlreadySaved = savedArticles.some((a) => a.title === article.title);
-//     if (!isAlreadySaved) {
-//       const saved = await saveArticle(article);
-//       setSavedArticles([...savedArticles, saved]);
-//     } else {
-//       setSavedArticles(savedArticles.filter((a) => a.title !== article.title));
-//     }
-//   };
-
-//   const handleSearchSubmit = async (query) => {
-//     setIsLoading(true);
-//     setError(null);
-//     setArticles([]);
-//     try {
-//       const response = await fetchNewsArticles(query);
-//       if (response.articles.length === 0) {
-//         setError("no-results");
-//       } else {
-//         setArticles(response.articles);
-//         setError(null);
-//       }
-//     } catch (err) {
-//       setError("no-results");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const onRegister = async ({ name, email, password }) => {
-//     try {
-//       const response = await signUp(name, email, password);
-//       if (response.success) {
-//         onSignIn({ email, password });
-//         closeActiveModal();
-//       } else {
-//         setError(response.message || "Registration failed.");
-//       }
-//     } catch (err) {
-//       setError("Registration failed. Try again.");
-//     }
-//   };
-
-//   const onSignIn = async ({ email, password }) => {
-//     try {
-//       const response = await signIn(email, password);
-//       if (response.token) {
-//         localStorage.setItem("jwt", response.token);
-//         checkToken(response.token).then((user) => {
-//           setCurrentUser(user);
-//           setIsLoggedIn(true);
-//           closeActiveModal();
-//         });
-//       } else {
-//         setError("Invalid login credentials.");
-//       }
-//     } catch (err) {
-//       setError("Login failed. Please try again.");
-//     }
-//   };
-
-//   const onSignOut = () => {
-//     signOut();
-//     localStorage.removeItem("jwt");
-//     setCurrentUser({});
-//     setIsLoggedIn(false);
-//   };
-
-//   return (
-//     <div className="page">
-//       <div className="page__content">
-//         <Header
-//           isLoggedIn={isLoggedIn}
-//           userName={currentUser.name || "User"}
-//           onSignInClick={handleLoginModal}
-//           onLogoutClick={onSignOut}
-//         />
-//         {isLoading && <Preloader />}
-//         <Routes>
-//           <Route
-//             path="/"
-//             element={
-//               <>
-//                 <Main
-//                   isLoggedIn={isLoggedIn}
-//                   onSignInClick={handleLoginModal}
-//                   onBookmarkToggle={handleBookmarkToggle}
-//                   savedArticles={savedArticles}
-//                   onSearch={handleSearchSubmit}
-//                   articles={articles}
-//                   isLoading={isLoading}
-//                   error={error}
-//                   setError={setError}
-//                 />
-//                 <About />
-//               </>
-//             }
-//           />
-//           <Route
-//             path="/saved-news"
-//             element={
-//               isLoggedIn ? (
-//                 <SavedArticles
-//                   userName={currentUser.name || "User"}
-//                   savedArticles={savedArticles}
-//                 />
-//               ) : (
-//                 <Navigate to="/" />
-//               )
-//             }
-//           />
-//         </Routes>
-//         <LoginModal
-//           closeActiveModal={closeActiveModal}
-//           isOpen={activeModal === "login"}
-//           handleRegisterModal={handleRegisterModal}
-//           onSignIn={onSignIn}
-//         />
-//         <RegisterModal
-//           closeActiveModal={closeActiveModal}
-//           isOpen={activeModal === "register"}
-//           handleLoginModal={handleLoginModal}
-//           onRegister={(userData) => {
-//             setCurrentUser(userData);
-//             setIsLoggedIn(true);
-//             setActiveModal("");
-//           }}
-//         />
-//         <CompletedModal
-//           closeActiveModal={closeActiveModal}
-//           isOpen={activeModal === "completed"}
-//         />
-//         <Footer />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
 import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useMatch } from "react-router-dom";
+import Header from "../Header/Header";
+import Main from "../Main/Main";
+import About from "../About/About";
+import NewsCardList from "../NewsCardList/NewsCardList";
+import Footer from "../Footer/Footer";
+import LoginModal from "../LoginModal/LoginModal";
+import RegisterModal from "../RegisterModal/RegisterModal";
 import "./App.css";
-import Header from "../Header/Header.jsx";
-import Main from "../Main/Main.jsx";
-import About from "../About/About.jsx";
-import Footer from "../Footer/Footer.jsx";
-import LoginModal from "../LoginModal/LoginModal.jsx";
-import RegisterModal from "../RegisterModal/RegisterModal.jsx";
-import CompletedModal from "../Completed/CompletedModal.jsx";
-import SavedArticles from "../SavedArticles/SavedArticles.jsx";
-import Preloader from "../Preloader/Preloader.jsx";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { fetchNewsArticles, checkToken } from "../../utils/api";
-import { signUp, signIn, signOut } from "../../utils/auth";
+import { auth } from "../../utils/auth";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import { API_KEY } from "../../utils/constants";
+import getNewsData from "../../utils/newsApi";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import SavedNews from "../SavedNews/SavedNews";
+import Preloader from "../Preloader/Preloader";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import MenuModal from "../MenuModal/MenuModal";
+import { api } from "../../utils/MainApi";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState({});
+  // State variables
   const [activeModal, setActiveModal] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [articles, setArticles] = useState([]);
+  const [isActive, setIsActive] = useState(false);
+  const [newsArticles, setNewsArticles] = useState(null);
+  const [savedNewsArticles, setSavedNewsArticles] = useState([]);
+  const [keyword, setKeyword] = useState(null);
+  const [numberOfCards, setNumberOfCards] = useState(3);
+  const [isSearching, setIsSearching] = useState(false);
+  const [nothingFound, setNothingFound] = useState(false);
+  const [newsApiError, setNewsApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
+  const [currentUser, setCurrentUser] = useState({});
+  const [apiError, setApiError] = useState(null);
+  const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
+  const match = useMatch("/");
+  const token = localStorage.getItem("jwt");
+
+  // Restore previous session search results
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      checkToken(token)
-        .then((user) => {
-          setCurrentUser(user);
-          setIsLoggedIn(true);
-        })
-        .catch(() => {
-          setError("Session expired. Please log in again.");
-          localStorage.removeItem("jwt");
-        });
+    if (localStorage.getItem("articles")) {
+      setNewsArticles(JSON.parse(localStorage.getItem("articles")));
+      setKeyword(localStorage.getItem("keyword"));
     }
   }, []);
 
-  const handleRegisterModal = () => setActiveModal("register");
-  const handleLoginModal = () => setActiveModal("login");
-  const closeActiveModal = () => setActiveModal("");
+  // Verify user authentication
+  useEffect(() => {
+    if (token) {
+      setIsCheckingToken(true);
+      api
+        .getUser(token)
+        .then((data) => {
+          setCurrentUser(data.data);
+          setIsLoggedIn(true);
+        })
+        .catch((err) => {
+          console.log("error", err);
+          if (err.response && err.response.status === 401) {
+            localStorage.removeItem("jwt");
+          }
+        })
+        .finally(() => {
+          setIsCheckingToken(false);
+        });
+      getUserArticles(token);
+    } else {
+      setIsCheckingToken(false);
+    }
+  }, [token]);
 
-  const handleSearchSubmit = async (query) => {
+  // Open and close modals
+  const handleSignInClick = () => {
+    setActiveModal("login");
+    setIsActive(true);
+  };
+
+  const handleRegisterClick = () => {
+    setActiveModal("register");
+  };
+
+  const closeModal = () => {
+    setApiError(null);
+    setIsActive(false);
+    setTimeout(() => {
+      setActiveModal(null);
+    }, 250);
+  };
+
+  // Handle user login
+  const handleUserLogin = (inputValues) => {
     setIsLoading(true);
-    setError("");
-    setArticles([]);
-    try {
-      const response = await fetchNewsArticles(query);
-      if (response.length === 0) {
-        setError("no-results");
-      } else {
-        setArticles(response);
-        setError("");
-      }
-    } catch (err) {
-      setError("no-results");
-    } finally {
-      setIsLoading(false);
-    }
+    auth
+      .login(inputValues)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem("jwt", data.token);
+          getUserArticles(data.token);
+          closeModal();
+        }
+      })
+      .catch((err) => {
+        if (err.includes("401") || err.includes("400")) {
+          setApiError("Incorrect email or password");
+        }
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  const onRegister = async ({ name, email, password }) => {
-    try {
-      const response = await signUp(name, email, password);
-      if (response.success) {
-        onSignIn({ email, password });
-        closeActiveModal();
-      } else {
-        setError(response.message || "Registration failed.");
-      }
-    } catch (err) {
-      setError("Registration failed. Try again.");
-    }
+  // Handle user registration
+  const handleUserRegistration = (inputValues) => {
+    setIsLoading(true);
+    auth
+      .register(inputValues)
+      .then(() => {
+        setActiveModal("confirm");
+      })
+      .catch((err) => {
+        if (err.includes("409")) {
+          setApiError("Email already in use");
+        }
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  const onSignIn = async ({ email, password }) => {
-    try {
-      const response = await signIn(email, password);
-      if (response.token) {
-        localStorage.setItem("jwt", response.token);
-        const user = await checkToken();
-        setCurrentUser(user);
-        setIsLoggedIn(true);
-        closeActiveModal(); 
-      } else {
-        setError("Invalid login credentials.");
-      }
-    } catch (err) {
-      setError("Login failed. Please try again.");
-      localStorage.removeItem("jwt");
+  // Fetch user's saved articles
+  useEffect(() => {
+    if (token) {
+      api.getArticles(token)
+        .then((articles) => {
+          if (Array.isArray(articles)) {
+            setSavedNewsArticles(articles);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch saved articles:", err);
+        });
     }
-  };
-  
+  }, [token]);
 
-  const onSignOut = () => {
-    signOut();
-    localStorage.removeItem("jwt");
-    setCurrentUser({});
+  // Handle deleting an article
+  const handleDeleteArticle = () => {
+    setIsLoading(true);
+    if (!selectedArticleId) return;
+
+    api.deleteArticle(selectedArticleId, token)
+      .then(() => {
+        setSavedNewsArticles((prev) =>
+          prev.filter((article) => article._id !== selectedArticleId)
+        );
+        setSelectedArticleId(null);
+        closeModal();
+      })
+      .catch((err) => {
+        console.error("Failed to delete article:", err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }; 
+
+  const handleDeleteButtonClick = (articleId) => {
+    setIsActive(true);
+    setActiveModal("delete");
+    setSelectedArticleId(articleId);
+  };
+
+  const handleSeeMoreClick = () => {
+    setNumberOfCards(numberOfCards + 3);
+  };
+
+  const handleHomeClick = () => {
+    setNewsApiError(null);
+    closeModal();
+    setNewsArticles(null);
+    setIsSearching(false);
+    localStorage.removeItem("articles");
+    localStorage.removeItem("keyword");
+  };
+
+  const handleLogoutClick = () => {
+    setNewsArticles(null);
+    setIsSearching(false);
+    localStorage.clear();
     setIsLoggedIn(false);
   };
 
+  const searchBtnClick = (data) => {
+    const keyword = data.charAt(0).toUpperCase() + data.slice(1);
+    setNumberOfCards(3);
+    setKeyword(keyword);
+    setNewsArticles(null);
+    setNothingFound(false);
+    setIsSearching(true);
+    getNewsData({ apiKey: API_KEY, keyword })
+      .then((data) => {
+        if (data.articles.length === 0) {
+          setNothingFound(true);
+        } else {
+          const articles = data.articles.map((article) => ({
+            ...article,
+            _id: Math.random(),
+          }));
+          setNewsArticles(articles);
+          setIsSearching(false);
+          localStorage.setItem("articles", JSON.stringify(articles));
+          localStorage.setItem("keyword", keyword);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setNewsApiError(err);
+        setIsSearching(false);
+      });
+  };
+
+  const handleMobileMenuClick = () => {
+    setTimeout(() => {
+      setIsActive(true);
+    }, 10);
+    setActiveModal("menu");
+  };
+
+  // Save an article
+  const handleSaveArticle = (card) => {
+    api
+      .saveArticle(card, token)
+      .then((data) => {
+        setSavedNewsArticles([...savedNewsArticles, data.data]);
+        setSelectedArticleId(data.data._id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div className="page">
-      <div className="page__content">
-        <Header
-          isLoggedIn={isLoggedIn}
-          userName={currentUser.name || "User"}
-          onSignInClick={handleLoginModal}
-          onLogoutClick={onSignOut}
-        />
-        {isLoading && <Preloader />}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+        <div
+          className={
+            match
+              ? "page__content page__content_path_main"
+              : "page__content page__content_path_saved-news"
+          }
+        >
+          <Header
+            isLoggedIn={isLoggedIn}
+            handleSignInClick={handleSignInClick}
+            handleLogoutClick={handleLogoutClick}
+            handleHomeClick={handleHomeClick}
+            handleMobileMenuClick={handleMobileMenuClick}
+          />
+  
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
                 <Main
-                  isLoggedIn={isLoggedIn}
-                  onSignInClick={handleLoginModal}
-                  onSearch={handleSearchSubmit}
-                  articles={articles}
-                  isLoading={isLoading}
-                  error={error}
-                  setError={setError}
+                  setActiveModal={setActiveModal}
+                  searchBtnClick={searchBtnClick}
+                  isSearching={isSearching}
+                  newsApiError={newsApiError}
                 />
-                <About />
-              </>
-            }
+              }
+            />
+            <Route
+              path="/saved-news"
+              element={
+                <ProtectedRoute
+                  isLoggedIn={isLoggedIn}
+                  setActiveModal={setActiveModal}
+                  isCheckingToken={isCheckingToken}
+                  setIsActive={setIsActive}
+                >
+                  <SavedNews
+                    handleDeleteButtonClick={handleDeleteButtonClick}
+                    isLoggedIn={isLoggedIn}
+                    newsArticles={savedNewsArticles}
+                    handleSignInClick={handleSignInClick}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+  
+        {isSearching && (
+          <Preloader isSearching={isSearching} nothingFound={nothingFound} />
+        )}
+  
+        {newsArticles && match && (
+          <NewsCardList
+            handleSaveArticle={handleSaveArticle}
+            keyword={keyword}
+            numberOfCards={numberOfCards}
+            newsArticles={newsArticles}
+            isLoggedIn={isLoggedIn}
+            handleSignInClick={handleSignInClick}
+            handleSeeMoreClick={handleSeeMoreClick}
+            handleDeleteArticle={handleDeleteArticle}
           />
-          <Route
-            path="/saved-news"
-            element={
-              isLoggedIn ? (
-                <SavedArticles userName={currentUser.name || "User"} />
-              ) : (
-                <Navigate to="/" />
-              )
-            }
+        )}
+  
+        {match && <About />}
+  
+        <Footer handleHomeClick={handleHomeClick} />
+  
+        {/* Modals */}
+        {activeModal === "login" && (
+          <LoginModal
+            isActive={isActive}
+            apiError={apiError}
+            isLoading={isLoading}
+            handleUserLogin={handleUserLogin}
+            closeModal={closeModal}
+            handleRegisterClick={handleRegisterClick}
           />
-        </Routes>
-        <LoginModal
-          closeActiveModal={closeActiveModal}
-          isOpen={activeModal === "login"}
-          handleRegisterModal={handleRegisterModal}
-          onSignIn={onSignIn}
-        />
-        <RegisterModal
-          closeActiveModal={closeActiveModal}
-          isOpen={activeModal === "register"}
-          handleLoginModal={handleLoginModal}
-          onRegister={onRegister}
-        />
-        <CompletedModal
-          closeActiveModal={closeActiveModal}
-          isOpen={activeModal === "completed"}
-        />
-        <Footer />
+        )}
+  
+        {activeModal === "register" && (
+          <RegisterModal
+            apiError={apiError}
+            isActive={isActive}
+            closeModal={closeModal}
+            handleLoginClick={handleSignInClick}
+            handleUserRegistration={handleUserRegistration}
+            isLoading={isLoading}
+          />
+        )}
+  
+        {activeModal === "menu" && (
+          <MenuModal
+            closeModal={closeModal}
+            handleSignInClick={handleSignInClick}
+            isActive={isActive}
+            isLoggedIn={isLoggedIn}
+            handleLogoutClick={handleLogoutClick}
+            handleHomeClick={handleHomeClick}
+          />
+        )}
+  
+        {activeModal === "delete" && (
+          <ConfirmationModal
+            closeModal={closeModal}
+            isActive={isActive}
+            buttonText={isLoading ? "Deleting..." : "Delete"}
+            title={"Are you sure you want to remove this card?"}
+            name={"delete"}
+            handleButton={handleDeleteArticle}
+          />
+        )}
+  
+        {activeModal === "confirm" && (
+          <ConfirmationModal
+            closeModal={closeModal}
+            isActive={isActive}
+            buttonText={"Sign in"}
+            title={"Registration successfully completed!"}
+            name={"confirm"}
+            handleButton={handleSignInClick}
+          />
+        )}
       </div>
-    </div>
-  );
+    </CurrentUserContext.Provider>
+  );  
 }
 
 export default App;
-

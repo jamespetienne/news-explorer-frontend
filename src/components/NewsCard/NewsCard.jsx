@@ -1,78 +1,117 @@
-import React, { useState } from "react";
+import React from "react";
 import "./NewsCard.css";
-import inactiveBookmark from "../../assets/inactive-bookmark.svg";
-import activeBookmark from "../../assets/active-bookmark.svg";
-import hoverBookmark from "../../assets/hover-bookmark.svg";
+import { useMatch } from "react-router-dom";
 
-function NewsCard({ article, isLoggedIn, onSignInClick, onBookmarkToggle }) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [showSigninPrompt, setShowSigninPrompt] = useState(false);
+function NewsCard({
+  cardInfo,
+  keyword,
+  isLoggedIn,
+  handleSigninClick,
+  handleSaveArticle,
+  handleDeleteButtonClick,
+  handleDeleteArticle,
+}) {
+  const match = useMatch("/");
 
-  const handleBookmarkClick = () => {
-    if (!isLoggedIn) {
-      setShowSigninPrompt(true);
-      return;
+  const card =
+    "publishedAt" in cardInfo
+      ? {
+          keyword,
+          title: cardInfo.title,
+          text: cardInfo.description,
+          date: cardInfo.publishedAt,
+          source: cardInfo.source.name,
+          link: cardInfo.url,
+          image: cardInfo.urlToImage,
+        }
+      : cardInfo;
+
+  const handleMouseEnter = (evt) => {
+    if (!isLoggedIn && evt.target.classList.contains("card__button")) {
+      evt.target.parentElement
+        .querySelector(".card__warning")
+        .classList.add("card__warning_active");
     }
-    setIsBookmarked(!isBookmarked);
-    if (onBookmarkToggle) {
-      onBookmarkToggle(article);
+  };
+  const handleMouseLeave = (evt) => {
+    evt.target.parentElement
+      .querySelector(".card__warning")
+      .classList.remove("card__warning_active");
+  };
+
+  // open link to web article
+  const handleCardClick = () => {
+    window.open(card.link, "_blank");
+  };
+
+  // bookmarking cards
+  const handleBookMarkButtonClick = (evt) => {
+    const bookmarkButton = evt.target.parentElement.querySelector(
+      ".card__button_path_main"
+    );
+
+    if (bookmarkButton.classList.contains("card__button_path_main_active")) {
+      handleDeleteArticle();
+      bookmarkButton.classList.remove("card__button_path_main_active");
+    } else {
+      handleSaveArticle(card);
+      bookmarkButton.classList.add("card__button_path_main_active");
     }
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setShowSigninPrompt(false);
-  };
-
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const formattedDate = formatDate(article.publishedAt);
+  const date = new Date(card.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
-    <div className="news-card">
+    <li className="card">
       <img
-        className="news-card__image"
-        src={article.imageUrl}
-        alt={article.title || "Article image"}
+        src={card.image}
+        alt={card.title}
+        className="card__image"
+        onClick={handleCardClick}
       />
-      <button
-        className="news-card__bookmark"
-        onClick={handleBookmarkClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        aria-label={isBookmarked ? "Remove bookmark" : "Bookmark this article"}
-      >
-        <img
-          src={
-            isBookmarked
-              ? activeBookmark
-              : isHovered
-              ? hoverBookmark
-              : inactiveBookmark
-          }
-          alt="Bookmark Icon"
-        />
-      </button>
-      {showSigninPrompt && (
-        <div className="news-card__signin-prompt" role="alert">
-          Sign in to save articles
+      <div className="card__content" onClick={handleCardClick}>
+        <p className="card__date">{date}</p>
+        <h2 className="card__title">{card.title}</h2>
+        <p className="card__paragraph">{card.text}</p>
+        <p className="card__source">{card.source}</p>
+      </div>
+      {/* render bookmark icon here if match, also handle clicking bookmark, adding to profile, etc. */}
+      {match ? (
+        <div
+          onMouseOver={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="card__absolute-content"
+        >
+          <button
+            className="card__warning"
+            type="button"
+            onClick={handleSigninClick}
+          >
+            Sign in to save articles
+          </button>
+          <button
+            onClick={isLoggedIn ? handleBookMarkButtonClick : handleSigninClick}
+            className="card__button card__button_path_main"
+            type="button"
+          ></button>
+        </div>
+      ) : (
+        <div className="card__absolute-content">
+          <span className="card__keyword">{card.keyword}</span>
+          <button
+            className="card__button card__button_path_saved-news"
+            type="button"
+            onClick={() => {
+              handleDeleteButtonClick(card._id);
+            }}
+          ></button>
         </div>
       )}
-      <div className="news-card__content">
-        <p className="news-card__date">{formattedDate}</p>
-        <h2 className="news-card__headline">{article.title}</h2>
-        <p className="news-card__snippet">{article.snippet}</p>
-        <p className="news-card__source">{article.source}</p>
-      </div>
-    </div>
+    </li>
   );
 }
 

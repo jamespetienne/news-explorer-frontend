@@ -1,18 +1,27 @@
-import { Navigate, useLocation } from "react-router-dom";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
-function ProtectedRoute({ children, anonymouse = false, isLoggedIn }) {
-  const location = useLocation();
-  const from = location.state?.from || "/profile";
+function ProtectedRoute({
+  children,
+  isLoggedIn,
+  setActiveModal,
+  isCheckingToken,
+  setIsActive,
+}) {
+  React.useEffect(() => {
+    if (!isCheckingToken && !isLoggedIn) {
+      setActiveModal('login');
+      setTimeout(() => {
+        setIsActive(true);
+      }, 10);
+    }
+  }, [isLoggedIn, setActiveModal, isCheckingToken, setIsActive]);
 
-  if (anonymouse && isLoggedIn) {
-    return <Navigate to={from} />;
+  if (!isLoggedIn && !isCheckingToken) {
+    return <Navigate to="/" />;
   }
 
-  if (!anonymouse && !isLoggedIn) {
-    return <Navigate to="/" state={{ from: location }} />;
-  } else {
-    return children;
-  }
+  return children;
 }
 
 export default ProtectedRoute;

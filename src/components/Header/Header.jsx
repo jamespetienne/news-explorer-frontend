@@ -1,26 +1,33 @@
+import React from "react";
+import { Link, useMatch } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
 import "./Header.css";
-import Navigation from "../Navigation/Navigation";
-import { useLocation } from "react-router-dom";
 
-function Header({ isLoggedIn, userName, onSignInClick }) {
-  const location = useLocation();
-  const isSavedNews = location.pathname === "/saved-news";
+function Header({
+  handleSignInClick,
+  handleLogoutClick,
+  isLoggedIn,
+  handleHomeClick,
+}) {
+  const match = useMatch("/");
 
   return (
-    <header className={`header ${isSavedNews ? "header_saved-news" : ""}`}>
-      <div className="header__container">
-        <Navigation
-          isLoggedIn={isLoggedIn}
-          userName={userName}
-          onSignInClick={onSignInClick}
-        />
-      </div>
+    <header className="header">
+      <Link className="header__link" to="/">
+        <p
+          className={
+            match
+              ? "header__logo header__logo_path_main"
+              : "header__logo header__logo_path_saved-news"
+          }
+          onClick={handleHomeClick}
+        >
+          NewsExplorer
+        </p>
+      </Link>
+      <Navbar handleHomeClick={handleHomeClick} isLoggedIn={isLoggedIn} handleSignInClick={handleSignInClick} handleLogoutClick={handleLogoutClick} />
     </header>
   );
 }
 
 export default Header;
-
-
-
-
