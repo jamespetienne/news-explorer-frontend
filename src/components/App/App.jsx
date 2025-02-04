@@ -35,7 +35,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [apiError, setApiError] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const match = useMatch("/");
   const token = localStorage.getItem("jwt");
