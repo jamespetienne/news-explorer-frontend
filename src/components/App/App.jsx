@@ -35,7 +35,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [apiError, setApiError] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const match = useMatch("/");
   const token = localStorage.getItem("jwt");
@@ -92,6 +92,28 @@ function App() {
   };
 
   // Handle user login
+  // const handleUserLogin = (inputValues) => {
+  //   setIsLoading(true);
+  //   auth
+  //     .login(inputValues)
+  //     .then((data) => {
+  //       if (data.token) {
+  //         localStorage.setItem("jwt", data.token);
+  //         getUserArticles(data.token);
+  //         closeModal();
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       if (err.includes("401") || err.includes("400")) {
+  //         setApiError("Incorrect email or password");
+  //       }
+  //       console.log(err);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
+
   const handleUserLogin = (inputValues) => {
     setIsLoading(true);
     auth
@@ -100,8 +122,12 @@ function App() {
         if (data.token) {
           localStorage.setItem("jwt", data.token);
           getUserArticles(data.token);
-          closeModal();
+          return api.getUser(data.token);  // Fetch user info after login
         }
+      })
+      .then((userData) => {
+        if (userData) setCurrentUser(userData.data);
+        closeModal();
       })
       .catch((err) => {
         if (err.includes("401") || err.includes("400")) {
@@ -113,6 +139,7 @@ function App() {
         setIsLoading(false);
       });
   };
+  
 
   // Handle user registration
   const handleUserRegistration = (inputValues) => {
@@ -134,40 +161,37 @@ function App() {
   };
 
   // Fetch user's saved articles
-  useEffect(() => {
-    if (token) {
-      api.getArticles(token)
-        .then((articles) => {
-          if (Array.isArray(articles)) {
-            setSavedNewsArticles(articles);
-          }
-        })
-        .catch((err) => {
-          console.error("Failed to fetch saved articles:", err);
-        });
-    }
-  }, [token]);
+  const getUserArticles = (token) => {
+    api
+      .getArticles(token)
+      .then((data) => {
+        setSavedNewsArticles(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // Handle deleting an article
   const handleDeleteArticle = () => {
     setIsLoading(true);
-    if (!selectedArticleId) return;
-
-    api.deleteArticle(selectedArticleId, token)
+    api
+      .deleteArticle(selectedArticleId, token)
       .then(() => {
-        setSavedNewsArticles((prev) =>
-          prev.filter((article) => article._id !== selectedArticleId)
+        const updatedSavedArticles = savedNewsArticles.filter(
+          (article) => article._id !== selectedArticleId
         );
+        setSavedNewsArticles([...updatedSavedArticles]);
         setSelectedArticleId(null);
         closeModal();
       })
       .catch((err) => {
-        console.error("Failed to delete article:", err);
+        console.log(err);
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }; 
+  };
 
   const handleDeleteButtonClick = (articleId) => {
     setIsActive(true);
@@ -232,17 +256,31 @@ function App() {
   };
 
   // Save an article
+  // const handleSaveArticle = (card) => {
+  //   api
+  //     .saveArticle(card, token)
+  //     .then((data) => {
+  //       setSavedNewsArticles([...savedNewsArticles, data.data]);
+  //       setSelectedArticleId(data.data._id);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
   const handleSaveArticle = (card) => {
     api
-      .saveArticle(card, token)
+      .saveArticle(card)
       .then((data) => {
-        setSavedNewsArticles([...savedNewsArticles, data.data]);
-        setSelectedArticleId(data.data._id);
+        if (!data._id) {
+          throw new Error("Article ID is missing from response");
+        }
+        setSavedNewsArticles([...savedNewsArticles, data]);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.error("Error saving article:", err));
   };
+  
+  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -301,7 +339,7 @@ function App() {
           <Preloader isSearching={isSearching} nothingFound={nothingFound} />
         )}
   
-        {newsArticles && match && (
+        {newsArticles?.length > 0 && match && (
           <NewsCardList
             handleSaveArticle={handleSaveArticle}
             keyword={keyword}

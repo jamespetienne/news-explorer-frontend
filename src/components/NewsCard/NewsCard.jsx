@@ -16,6 +16,7 @@ function NewsCard({
   const card =
     "publishedAt" in cardInfo
       ? {
+          _id: cardInfo._id || Math.random().toString(36).substr(2, 9),
           keyword,
           title: cardInfo.title,
           text: cardInfo.description,
@@ -49,6 +50,11 @@ function NewsCard({
     const bookmarkButton = evt.target.parentElement.querySelector(
       ".card__button_path_main"
     );
+
+    if (!card._id) {
+      console.error("Error: Card ID is missing");
+      return;
+    }
 
     if (bookmarkButton.classList.contains("card__button_path_main_active")) {
       handleDeleteArticle();
@@ -116,4 +122,3 @@ function NewsCard({
 }
 
 export default NewsCard;
-

@@ -13,7 +13,7 @@ function SavedNews({
       <SavedNewsHeader newsArticles={newsArticles} />
       <NewsCardList
         handleDeleteButtonClick={handleDeleteButtonClick}
-        newsArticles={newsArticles || []}
+        newsArticles={newsArticles}
         isLoggedIn={isLoggedIn}
         handleSigninClick={handleSigninClick}
       />

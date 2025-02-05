@@ -18,7 +18,7 @@ function NewsCardList({ keyword, numberOfCards, newsArticles, handleSeeMoreClick
             handleDeleteButtonClick={handleDeleteButtonClick}
             keyword={keyword}
             handleSaveArticle={handleSaveArticle}
-            key={article._id || article.tit}
+            key={article._id}
             cardInfo={article}
             isLoggedIn={isLoggedIn}
             handleSigninClick={handleSigninClick}
