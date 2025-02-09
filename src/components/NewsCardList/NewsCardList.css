@@ -35,13 +35,12 @@
   max-width: 288px;
   margin-top: 64px;
   border: none;
-  background-color: #e8e8e8;
-  font-weight: 500;
+  background-color: #FFFFFF;
   border-radius: 80px;
   padding: 20px 98px;
   transition: background-color 0.5s;
   cursor: pointer;
-  line-height: 1.33;
+  font: 500 18px/24px Roboto, Arial, sans-serif;
 }
 
 .cards__button:hover {
@@ -95,15 +94,17 @@
 
 @media screen and (max-width: 501px) {
   .cards {
+    margin: auto ;
     padding: 32px 16px 24px;
   }
 
   .cards__list {
     justify-content: center;
+    gap: 10px;
   }
 
   .cards__button {
     max-width: 288px;
-    padding: 16px 99px;
+    padding: 16px 70px; 
   }
 }

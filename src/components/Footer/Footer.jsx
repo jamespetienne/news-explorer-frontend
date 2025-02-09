@@ -1,37 +1,49 @@
 import React from "react";
 import "./Footer.css";
+import githubIcon from "../../assets/github.png"; // Ensure this path is correct
+import linkedinIcon from "../../assets/linkedin.png"; // Ensure this path is correct
 
 function Footer() {
   return (
     <footer className="footer">
       <p className="footer__text">© 2024 Supersite, Powered by News API</p>
-      <ul className="footer__links">
-        <li>
-          <a href="/" className="footer__link">
-            Home
-          </a>
-        </li>
-        <li>
+      
+      <div className="footer__content">
+        <ul className="footer__nav-links">
+          <li>
+            <a href="/" className="footer__nav-link">
+              Home
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://tripleten.com"
+              className="footer__nav-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TripleTen
+            </a>
+          </li>
+        </ul>
+
+        <div className="footer__icons">
           <a
-            href="https://tripleten.com"
-            className="footer__link"
+            href="https://github.com/jamespetienne"
             target="_blank"
             rel="noopener noreferrer"
           >
-            TripleTen
+            <img src={githubIcon} alt="GitHub" className="footer__icon" />
           </a>
-        </li>
-        <li>
           <a
-            href="https://facebook.com"
-            className="footer__link"
+            href="https://www.linkedin.com/in/james-etienne-b35982244/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Facebook
+            <img src={linkedinIcon} alt="LinkedIn" className="footer__icon" />
           </a>
-        </li>
-      </ul>
+        </div>
+      </div>
     </footer>
   );
 }

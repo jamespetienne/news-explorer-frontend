@@ -38,19 +38,23 @@
   font: 400 26px/30px Roboto Slab, Arial, sans-serif;
   color: #1a1b22;
   margin: 0 0 4px 0;
+  padding-bottom: 25px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   overflow: hidden;
   height: 100%;
 }
 
 .card__paragraph {
   margin: 0 0 6px 0;
+  padding-top: 10px;
   color: #1a1b22;
   font: 400 16px/22px Roboto, Arial, sans-serif;
   max-height: 110px;
   height: 100%;
   display: -webkit-box;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -151,18 +155,13 @@
     font-size: 22px;
     line-height: 1.1;
     margin: 0;
-    padding-bottom: 3px;
+    padding-bottom: 10px;
+    -webkit-line-clamp: 3;
   }
 
   .card__paragraph {
     max-height: 88px;
-    -webkit-line-clamp: 4;
-  }
-
-  .card__absolute-content {
-    width: 92%;
-    top: 8px;
-    right: 8px;
+    -webkit-line-clamp: 3;
   }
 
   .card__warning {
@@ -179,9 +178,8 @@
 
 @media screen and (max-width: 501px) {
   .card {
-    max-width: 288px;
     width: 100%;
-    justify-content: space-between;
+    height: 100%;
   }
 
   .card__content {
@@ -205,11 +203,5 @@
   .card__image {
     max-height: 196px;
     height: 196px;
-  }
-
-  .card__absolute-content {
-    width: 87%;
-    top: 16px;
-    right: 16px;
   }
 }

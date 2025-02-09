@@ -12,14 +12,15 @@ function SearchForm({ searchBtnClick, isSearching, newsApiError }) {
   };
 
   const handleSubmit = (evt) => {
-    evt.preventDefault(); 
-    if (values.topic === "") {
-      console.log("topic is blank");
-    }
-    if (values.topic !== "") {
-      searchBtnClick(values.topic);
+    evt.preventDefault();
+    const searchInput = values.topic.trim(); 
+    if (searchInput) {
+      searchBtnClick(searchInput); 
+    } else {
+      setIsError(true); 
     }
   };
+  
 
   useEffect(() => {
     if (!isSearching) {

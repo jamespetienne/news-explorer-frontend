@@ -48,31 +48,6 @@ function App() {
     }
   }, []);
 
-  // Verify user authentication
-  useEffect(() => {
-    if (token) {
-      setIsCheckingToken(true);
-      api
-        .getUser(token)
-        .then((data) => {
-          setCurrentUser(data.data);
-          setIsLoggedIn(true);
-        })
-        .catch((err) => {
-          console.log("error", err);
-          if (err.response && err.response.status === 401) {
-            localStorage.removeItem("jwt");
-          }
-        })
-        .finally(() => {
-          setIsCheckingToken(false);
-        });
-      getUserArticles(token);
-    } else {
-      setIsCheckingToken(false);
-    }
-  }, [token]);
-
   // Open and close modals
   const handleSignInClick = () => {
     setActiveModal("login");
@@ -114,32 +89,44 @@ function App() {
   //     });
   // };
 
+  // const handleUserLogin = (inputValues) => {
+  //   setIsLoading(true);
+  //   auth
+  //     .login(inputValues)
+  //     .then((data) => {
+  //       if (data.token) {
+  //         localStorage.setItem("jwt", data.token);
+  //         getUserArticles(data.token);
+  //         return api.getUser(data.token);  // Fetch user info after login
+  //       }
+  //     })
+  //     .then((userData) => {
+  //       if (userData) setCurrentUser(userData.data);
+  //       closeModal();
+  //     })
+  //     .catch((err) => {
+  //       const errorMessage = String(err); // Convert error to string
+  //       if (errorMessage.includes("401") || errorMessage.includes("400")) {
+  //         setApiError("Incorrect email or password");
+  //       }
+  //       console.log(errorMessage);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
   const handleUserLogin = (inputValues) => {
     setIsLoading(true);
-    auth
-      .login(inputValues)
+    authorize(inputValues.email, inputValues.password)
       .then((data) => {
-        if (data.token) {
-          localStorage.setItem("jwt", data.token);
-          getUserArticles(data.token);
-          return api.getUser(data.token);  // Fetch user info after login
-        }
+        checkToken(data.token).then((user) => {
+          setCurrentUser(user.data);
+          setIsLoggedIn(true);
+          closeModal();
+        });
       })
-      .then((userData) => {
-        if (userData) setCurrentUser(userData.data);
-        closeModal();
-      })
-      .catch((err) => {
-        if (err.includes("401") || err.includes("400")) {
-          setApiError("Incorrect email or password");
-        }
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      .catch(() => setIsLoading(false));
   };
-  
 
   // Handle user registration
   const handleUserRegistration = (inputValues) => {
@@ -150,10 +137,11 @@ function App() {
         setActiveModal("confirm");
       })
       .catch((err) => {
-        if (err.includes("409")) {
+        const errorMessage = String(err); // Convert error to string
+        if (errorMessage.includes("409")) {
           setApiError("Email already in use");
         }
-        console.log(err);
+        console.log(errorMessage);
       })
       .finally(() => {
         setIsLoading(false);
@@ -173,25 +161,58 @@ function App() {
   };
 
   // Handle deleting an article
-  const handleDeleteArticle = () => {
-    setIsLoading(true);
-    api
-      .deleteArticle(selectedArticleId, token)
-      .then(() => {
-        const updatedSavedArticles = savedNewsArticles.filter(
-          (article) => article._id !== selectedArticleId
-        );
-        setSavedNewsArticles([...updatedSavedArticles]);
-        setSelectedArticleId(null);
-        closeModal();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+  // const handleDeleteArticle = () => {
+  //   setIsLoading(true);
+  //   api
+  //     .deleteArticle(selectedArticleId, token)
+  //     .then(() => {
+  //       const updatedSavedArticles = savedNewsArticles.filter(
+  //         (article) => article._id !== selectedArticleId
+  //       );
+  //       setSavedNewsArticles([...updatedSavedArticles]);
+  //       setSelectedArticleId(null);
+  //       closeModal();
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
+
+  const handleDeleteArticle = (articleId) => {
+    api.deleteArticle(articleId).then(() => {
+      setSavedNewsArticles(
+        savedNewsArticles.filter((a) => a._id !== articleId)
+      );
+    });
   };
+
+  // Verify user authentication
+  useEffect(() => {
+    if (token) {
+      setIsCheckingToken(true);
+      api
+        .getUser(token)
+        .then((data) => {
+          setCurrentUser(data.data);
+          setIsLoggedIn(true);
+        })
+        .catch((err) => {
+          console.log("error", err);
+          if (err.response && err.response.status === 401) {
+            localStorage.removeItem("jwt");
+          }
+        })
+        .finally(() => {
+          setIsCheckingToken(false);
+        });
+      getUserArticles(token);
+    } else {
+      setIsCheckingToken(false);
+    }
+  }, [token]);
 
   const handleDeleteButtonClick = (articleId) => {
     setIsActive(true);
@@ -249,38 +270,28 @@ function App() {
   };
 
   const handleMobileMenuClick = () => {
-    setTimeout(() => {
-      setIsActive(true);
-    }, 10);
+    setIsActive(true); 
     setActiveModal("menu");
   };
+  
 
-  // Save an article
   // const handleSaveArticle = (card) => {
   //   api
-  //     .saveArticle(card, token)
+  //     .saveArticle(card)
   //     .then((data) => {
-  //       setSavedNewsArticles([...savedNewsArticles, data.data]);
-  //       setSelectedArticleId(data.data._id);
+  //       if (!data._id) {
+  //         throw new Error("Article ID is missing from response");
+  //       }
+  //       setSavedNewsArticles([...savedNewsArticles, data]);
   //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
+  //     .catch((err) => console.error("Error saving article:", err));
   // };
 
-  const handleSaveArticle = (card) => {
-    api
-      .saveArticle(card)
-      .then((data) => {
-        if (!data._id) {
-          throw new Error("Article ID is missing from response");
-        }
-        setSavedNewsArticles([...savedNewsArticles, data]);
-      })
-      .catch((err) => console.error("Error saving article:", err));
+  const handleSaveArticle = (article) => {
+    api.saveArticle(article).then((savedArticle) => {
+      setSavedNewsArticles([...savedNewsArticles, savedArticle]);
+    });
   };
-  
-  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -299,7 +310,7 @@ function App() {
             handleHomeClick={handleHomeClick}
             handleMobileMenuClick={handleMobileMenuClick}
           />
-  
+
           <Routes>
             <Route
               exact
@@ -334,11 +345,11 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
-  
+
         {isSearching && (
           <Preloader isSearching={isSearching} nothingFound={nothingFound} />
         )}
-  
+
         {newsArticles?.length > 0 && match && (
           <NewsCardList
             handleSaveArticle={handleSaveArticle}
@@ -351,11 +362,11 @@ function App() {
             handleDeleteArticle={handleDeleteArticle}
           />
         )}
-  
+
         {match && <About />}
-  
+
         <Footer handleHomeClick={handleHomeClick} />
-  
+
         {/* Modals */}
         {activeModal === "login" && (
           <LoginModal
@@ -367,7 +378,7 @@ function App() {
             handleRegisterClick={handleRegisterClick}
           />
         )}
-  
+
         {activeModal === "register" && (
           <RegisterModal
             apiError={apiError}
@@ -378,7 +389,7 @@ function App() {
             isLoading={isLoading}
           />
         )}
-  
+
         {activeModal === "menu" && (
           <MenuModal
             closeModal={closeModal}
@@ -389,7 +400,7 @@ function App() {
             handleHomeClick={handleHomeClick}
           />
         )}
-  
+
         {activeModal === "delete" && (
           <ConfirmationModal
             closeModal={closeModal}
@@ -400,7 +411,7 @@ function App() {
             handleButton={handleDeleteArticle}
           />
         )}
-  
+
         {activeModal === "confirm" && (
           <ConfirmationModal
             closeModal={closeModal}
@@ -413,7 +424,7 @@ function App() {
         )}
       </div>
     </CurrentUserContext.Provider>
-  );  
+  );
 }
 
 export default App;

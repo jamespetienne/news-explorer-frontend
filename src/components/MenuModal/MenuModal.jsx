@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './MenuModal.css';
 import { useEscape } from '../../hooks/useEscape';
-// import logOut from '../../images/logout-white.svg';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 function MenuModal({
@@ -37,7 +36,10 @@ function MenuModal({
   }
 
   return (
-    <div className="modal menu-modal" onClick={handleClickOutsideClose}>
+    <div 
+      className={`modal menu-modal ${isActive ? "menu-modal_opened" : ""}`} 
+      onClick={handleClickOutsideClose}
+    >
       <div className="menu-modal__container">
         <header className="menu-modal__header">
           <p className="header__logo" onClick={handleHomeClick}>
@@ -52,8 +54,8 @@ function MenuModal({
         <nav
           className={
             isLoggedIn
-              ? 'menu-modal__nav menu-modal__nav_loggedin'
-              : 'menu-modal__nav menu-modal__nav_loggedout'
+              ? "menu-modal__nav menu-modal__nav_loggedin"
+              : "menu-modal__nav menu-modal__nav_loggedout"
           }
         >
           <NavLink
@@ -94,6 +96,7 @@ function MenuModal({
       </div>
     </div>
   );
+  
 }
 
 export default MenuModal;

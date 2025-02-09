@@ -25,7 +25,12 @@ function Header({
           NewsExplorer
         </p>
       </Link>
-      <Navbar handleHomeClick={handleHomeClick} isLoggedIn={isLoggedIn} handleSignInClick={handleSignInClick} handleLogoutClick={handleLogoutClick} />
+      <Navbar
+        handleHomeClick={handleHomeClick}
+        isLoggedIn={isLoggedIn}
+        handleSignInClick={handleSignInClick}
+        handleLogoutClick={handleLogoutClick}
+      />
     </header>
   );
 }

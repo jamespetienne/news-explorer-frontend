@@ -33,7 +33,7 @@ function NewsCardList({ keyword, numberOfCards, newsArticles, handleSeeMoreClick
           type="button"
           className="cards__button"
         >
-          See more
+          Show more
         </button>
       )}
     </section>

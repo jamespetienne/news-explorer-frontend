@@ -3,13 +3,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 16px;
+  margin: 0 auto;
+  max-width: 1440px;
   background-color: #ffffff;
   font: 400 16px/22px Roboto, Arial, sans-serif;
-  color: #B6BCBF;
+  color: #b6bcbf;
 }
 
-.footer__links {
+.footer__content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.footer__nav-links {
   display: flex;
   gap: 40px;
   list-style: none;
@@ -17,12 +25,50 @@
   padding: 0;
 }
 
-.footer__link {
+.footer__nav-link {
   text-decoration: none;
-  color: #1A1B22;
+  color: #1a1b22;
   font: 400 18px/24px Roboto, Arial, sans-serif;
 }
 
-.footer__link:hover {
+.footer__nav-link:hover {
   text-decoration: underline;
+}
+
+.footer__icons {
+  display: flex;
+  gap: 16px;
+}
+
+.footer__icon {
+  width: 24px;
+  height: 24px;
+}
+
+@media screen and (max-width: 610px) {
+  .footer {
+    padding-top: 120px;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .footer__content {
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .footer__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 135px;
+  }
+
+  .footer__nav-links {
+    display: flex;
+    flex-direction: column;
+  }
 }
