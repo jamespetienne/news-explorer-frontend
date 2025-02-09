@@ -35,7 +35,7 @@
   max-width: 288px;
   margin-top: 64px;
   border: none;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 80px;
   padding: 20px 98px;
   transition: background-color 0.5s;
@@ -81,7 +81,7 @@
   .cards__button {
     max-width: 240px;
     margin-top: 32px;
-    padding: 16px 75px;
+    padding: 16px 70px;
   }
 }
 
@@ -94,7 +94,7 @@
 
 @media screen and (max-width: 501px) {
   .cards {
-    margin: auto ;
+    margin: auto;
     padding: 32px 16px 24px;
   }
 
@@ -105,6 +105,6 @@
 
   .cards__button {
     max-width: 288px;
-    padding: 16px 70px; 
+    padding: 16px 70px;
   }
 }
