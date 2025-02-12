@@ -16,7 +16,7 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import SavedNews from "../SavedNews/SavedNews";
 import Preloader from "../Preloader/Preloader";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
-import MenuModal from "../MenuModal/MenuModal";
+import BurgerMenu from "../BurgerMenu/BurgerMenu";
 import { api } from "../../utils/MainApi";
 
 function App() {
@@ -32,10 +32,11 @@ function App() {
   const [newsApiError, setNewsApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({name: "James"});
   const [apiError, setApiError] = useState(null);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const match = useMatch("/");
   const token = localStorage.getItem("jwt");
@@ -52,6 +53,7 @@ function App() {
   const handleSignInClick = () => {
     setActiveModal("login");
     setIsActive(true);
+    setIsMenuOpen(false);
   };
 
   const handleRegisterClick = () => {
@@ -66,55 +68,6 @@ function App() {
     }, 250);
   };
 
-  // Handle user login
-  // const handleUserLogin = (inputValues) => {
-  //   setIsLoading(true);
-  //   auth
-  //     .login(inputValues)
-  //     .then((data) => {
-  //       if (data.token) {
-  //         localStorage.setItem("jwt", data.token);
-  //         getUserArticles(data.token);
-  //         closeModal();
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       if (err.includes("401") || err.includes("400")) {
-  //         setApiError("Incorrect email or password");
-  //       }
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // };
-
-  // const handleUserLogin = (inputValues) => {
-  //   setIsLoading(true);
-  //   auth
-  //     .login(inputValues)
-  //     .then((data) => {
-  //       if (data.token) {
-  //         localStorage.setItem("jwt", data.token);
-  //         getUserArticles(data.token);
-  //         return api.getUser(data.token);  // Fetch user info after login
-  //       }
-  //     })
-  //     .then((userData) => {
-  //       if (userData) setCurrentUser(userData.data);
-  //       closeModal();
-  //     })
-  //     .catch((err) => {
-  //       const errorMessage = String(err); // Convert error to string
-  //       if (errorMessage.includes("401") || errorMessage.includes("400")) {
-  //         setApiError("Incorrect email or password");
-  //       }
-  //       console.log(errorMessage);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // };
   const handleUserLogin = (inputValues) => {
     setIsLoading(true);
     authorize(inputValues.email, inputValues.password)
@@ -159,27 +112,6 @@ function App() {
         console.log(err);
       });
   };
-
-  // Handle deleting an article
-  // const handleDeleteArticle = () => {
-  //   setIsLoading(true);
-  //   api
-  //     .deleteArticle(selectedArticleId, token)
-  //     .then(() => {
-  //       const updatedSavedArticles = savedNewsArticles.filter(
-  //         (article) => article._id !== selectedArticleId
-  //       );
-  //       setSavedNewsArticles([...updatedSavedArticles]);
-  //       setSelectedArticleId(null);
-  //       closeModal();
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // };
 
   const handleDeleteArticle = (articleId) => {
     api.deleteArticle(articleId).then(() => {
@@ -238,6 +170,7 @@ function App() {
     setIsSearching(false);
     localStorage.clear();
     setIsLoggedIn(false);
+    handleMenuClose();
   };
 
   const searchBtnClick = (data) => {
@@ -269,28 +202,18 @@ function App() {
       });
   };
 
-  const handleMobileMenuClick = () => {
-    setIsActive(true); 
-    setActiveModal("menu");
-  };
-  
-
-  // const handleSaveArticle = (card) => {
-  //   api
-  //     .saveArticle(card)
-  //     .then((data) => {
-  //       if (!data._id) {
-  //         throw new Error("Article ID is missing from response");
-  //       }
-  //       setSavedNewsArticles([...savedNewsArticles, data]);
-  //     })
-  //     .catch((err) => console.error("Error saving article:", err));
-  // };
-
   const handleSaveArticle = (article) => {
     api.saveArticle(article).then((savedArticle) => {
       setSavedNewsArticles([...savedNewsArticles, savedArticle]);
     });
+  };
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
   };
 
   return (
@@ -308,7 +231,15 @@ function App() {
             handleSignInClick={handleSignInClick}
             handleLogoutClick={handleLogoutClick}
             handleHomeClick={handleHomeClick}
-            handleMobileMenuClick={handleMobileMenuClick}
+            handleMenuToggle={handleMenuToggle}
+          />
+
+          <BurgerMenu
+            isOpen={isMenuOpen}
+            handleClose={handleMenuClose}
+            isLoggedIn={isLoggedIn}
+            handleSignInClick={handleSignInClick}
+            handleLogoutClick={handleLogoutClick}
           />
 
           <Routes>
@@ -387,17 +318,6 @@ function App() {
             handleLoginClick={handleSignInClick}
             handleUserRegistration={handleUserRegistration}
             isLoading={isLoading}
-          />
-        )}
-
-        {activeModal === "menu" && (
-          <MenuModal
-            closeModal={closeModal}
-            handleSignInClick={handleSignInClick}
-            isActive={isActive}
-            isLoggedIn={isLoggedIn}
-            handleLogoutClick={handleLogoutClick}
-            handleHomeClick={handleHomeClick}
           />
         )}
 

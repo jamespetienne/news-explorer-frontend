@@ -1,6 +1,6 @@
 .card {
   max-width: 400px;
-  width: 32%;
+  width: 100%;
   height: 576px;
   position: relative;
   text-decoration: none;
@@ -41,11 +41,11 @@
   padding-bottom: 25px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* Show 2 lines before truncation */
+  -webkit-line-clamp: 2; 
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal; /* Allow wrapping */
-  max-height: 65px; /* 30px line-height x 2 lines */
+  white-space: normal; 
+  max-height: 65px; 
 }
 
 .card__paragraph {

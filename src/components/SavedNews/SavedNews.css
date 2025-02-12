@@ -52,10 +52,14 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   justify-content: center;
+  padding: 0 16px;
+  background: #F5F6F7;
+  
 }
 
 .saved-news__card {
   max-width: 400px;
+  width: 100%;
   height: 576px;
   position: relative;
   text-decoration: none;
@@ -91,22 +95,28 @@
 }
 
 .saved-news__title-text {
-  font: 400 26px/30px Roboto Slab, Arial, sans-serif;
+  font: 400 26px/30px "Roboto Slab", Arial, sans-serif;
   color: #1a1b22;
-  margin: 0 0 4px 0;
+  margin: 0 0 -10px 0;
+  padding-bottom: 25px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; 
   overflow: hidden;
-  height: 100%;
+  text-overflow: ellipsis;
+  white-space: normal; 
+  max-height: 65px; 
 }
 
 .saved-news__text {
   margin: 0 0 6px 0;
+  padding-top: 10px;
   color: #1a1b22;
   font: 400 16px/22px Roboto, Arial, sans-serif;
   max-height: 110px;
   height: 100%;
   display: -webkit-box;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

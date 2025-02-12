@@ -30,6 +30,10 @@
   font-weight: bold;
 }
 
+.saved-news-header__title{
+  
+}
+
 @media screen and (max-width: 1200px) {
   .saved-news-header {
     padding: 40px 0 40px 56px;

@@ -81,7 +81,7 @@ function NewsCard({
       />
       <div className="card__content" onClick={handleCardClick}>
         <p className="card__date">{date}</p>
-        <h2 className="card__title">{card.title}</h2>
+        <h3 className="card__title">{card.title}</h3>
         <p className="card__paragraph">{card.text}</p>
         <p className="card__source">{card.source}</p>
       </div>
