@@ -1,5 +1,5 @@
 .cards {
-  padding: 80px 102px 80px;
+  padding: 40px;
   background-color: #f5f6f7;
   margin: 0 auto;
   max-width: 1440px;
@@ -25,6 +25,7 @@
 .cards__list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   margin: 0;
   padding: 0;
   gap: 16px;
@@ -48,18 +49,19 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .cards {
+  /* .cards {
     padding: 80px 51px 102px;
   }
 
   .cards_path_saved-news {
     padding-top: 62px;
-  }
+  } */
 }
 
 @media screen and (max-width: 919px) {
   .cards {
     padding: 40px;
+    
   }
 
   .cards_path_saved-news {
@@ -73,9 +75,8 @@
   }
 
   .cards__list {
-    gap: 0;
-    row-gap: 8px;
-    justify-content: space-between;
+    gap: 10px;
+    justify-content: center;
   }
 
   .cards__button {
@@ -87,7 +88,7 @@
 
 @media screen and (max-width: 631px) {
   .cards__list {
-    justify-content: normal;
+    justify-content: center;
     column-gap: 16px;
   }
 }

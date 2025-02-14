@@ -60,9 +60,7 @@ function SavedNews(newsArticles) {
 
   return (
     <section className="saved-news">
-      
       <SavedNewsHeader newsArticles={sampleArticles} />
-      <h2 className="saved-news__title">Saved Articles</h2>
       <ul className="saved-news__list">
         {sampleArticles.map((article) => (
           <li key={article.id} className="saved-news__card">
