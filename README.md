@@ -39,8 +39,16 @@
 7. **Responsive Design**
    - Fully responsive layout optimized for both desktop and mobile devices.
    - Follows design specifications from Figma.
+   ### Desktop
+   <img src="https://github.com/user-attachments/assets/e9304016-53db-46ad-addb-55b44488958b" alt="Desktop View" width="800">
 
-8. **Deployment**
+   ### Tablet
+   <img src="https://github.com/user-attachments/assets/279be59e-8a70-4b22-9342-3dab86565fd6" alt="Tablet View" width="600">
+
+   ### Mobile
+   <img src="https://github.com/user-attachments/assets/c7c058a9-67f4-4bd4-9ea2-b0cf7edaea17" alt="Mobile View" width="400">
+
+9. **Deployment**
    - Hosted on GitHub Pages for public access.
    - Fully functional navigation with HashRouter to ensure compatibility with GitHub Pages.
 
